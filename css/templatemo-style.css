@@ -146,7 +146,7 @@ header {
 
 #main-nav ul {
   text-align: center;
-  background-color: rgba(0,0,0,0.9);
+  background-color: transparent;
   margin-top: 59px;
   width: 100%;
 }
@@ -170,7 +170,7 @@ header {
 }
 
 .navbar-toggle span {
-  background-color: #232323;
+  background-color: transparent;
 }
 
 
