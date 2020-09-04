@@ -224,16 +224,7 @@ header {
   border: 2px solid #fff;
   transition: all 0.3s;
 }
-.rect{
-  height: 1px;
-  width: 0px;
-  left: 0;
-  bottom: 5.5px;
-  background-color: #fff;
-  -webkit-transition: -webkit-transform 0.1s, width 0.6s;
-  -moz-transition: -webkit-transform 0.1s, width 0.6s;
-  transition: transform 0.1s, width 0.6s;
-}
+
 .sidebar-navigation nav a:focus {
   color: #fff;
 }
