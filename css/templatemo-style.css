@@ -181,7 +181,6 @@ header {
   float: left;
   height: 100%;
   position: fixed;
-  background-color: rgba(12,12,12,0.9);
   z-index: 10;
 }
 
