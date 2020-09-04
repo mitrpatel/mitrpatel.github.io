@@ -50,11 +50,7 @@ p {
   margin-right: 50px;
 }
 
-.section-heading em {
-  font-style: normal;
-  font-weight: 700;
-  color: #45489a;
-}
+
 
 .section-heading p {
   display: inline-block;
@@ -65,20 +61,7 @@ p {
   top: 12.5px;
 }
 
-.white-button a {
-  font-size: 13px;
-  font-weight: 600;
-  color: #45489a;
-  text-transform: capitalize;
-  background-color: #fff;
-  display: inline-block;
-  height: 44px;
-  line-height: 44px;
-  padding: 0px 25px;
-  letter-spacing: 0.25px;
-  text-decoration: none;
-  transition: all 0.3s;
-}
+
 
 .white-button a:hover {
   background-color: #45489a;
