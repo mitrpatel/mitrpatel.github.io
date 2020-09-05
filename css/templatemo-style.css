@@ -11,7 +11,7 @@ body {
 }
 
 p {
-  font-size: 13px;
+  font-size: 18px;
   color: #7a7a7a;
   line-height: 24px;
 }
@@ -44,7 +44,7 @@ p {
 
 .section-heading h1 {
   margin-top: 0px;
-  font-size: 32px;
+  font-size: 37px;
   color: #232323;
   display: inline-block;
   margin-right: 50px;
@@ -58,7 +58,7 @@ p {
 
 .section-heading p {
   display: inline-block;
-  font-size: 15px;
+  font-size: 20px;
   line-height: 26px;
   color: #343434;
   position: absolute;
@@ -66,7 +66,7 @@ p {
 }
 
 .white-button a {
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 600;
   color: #45489a;
   text-transform: capitalize;
@@ -86,7 +86,7 @@ p {
 }
 
 .accent-button a {
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 600;
   color: #fff;
   text-transform: capitalize;
@@ -190,7 +190,7 @@ header {
 .sidebar-navigation .logo a {
   text-decoration: none;
   color: #fff;
-  font-size: 24px;
+  font-size: 29px;
   font-weight: 700;
   text-transform: uppercase;
   letter-spacing: 0.5px;
@@ -233,7 +233,7 @@ header {
   color: #fff;
   margin-top: 5px;
   text-decoration: none!important;
-  font-size: 15px;
+  font-size: 20px;
   letter-spacing: 0.5px;
   text-transform: capitalize;
 }
@@ -340,13 +340,13 @@ header {
 .Modern-Slider .info h1 {
   margin-top: 0px;
   margin-bottom: 15px;
-  font-size: 48px;
+  font-size: 53px;
   color: #fff;
   font-weight: 700;
 }
 
 .Modern-Slider .info p {
-  font-size: 15px;
+  font-size: 20px;
   color: #fff;
 }
 
@@ -509,7 +509,7 @@ header {
   line-height: 42px;
   background-color: #eee;
   color: #232323;
-  font-size: 42px;
+  font-size: 47px;
   transition: all 0.5s;
 }
 
@@ -534,7 +534,7 @@ header {
 }
 
 #featured .item .image .featured-button a {
-  font-size: 13px;
+  font-size: 18px;
   font-weight: 600;
   color: #fff;
   text-align: center;
@@ -568,7 +568,7 @@ header {
 #featured .item .text-content h4 {
   margin-top: 0px;
   margin-bottom: 5px;
-  font-size: 21px;
+  font-size: 26px;
   font-weight: 600;
   color: #232323;
   letter-spacing: 0.5px;
@@ -576,7 +576,7 @@ header {
 
 #featured .item .text-content span {
   display: inline-block;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
   color: #7a7a7a;
   letter-spacing: 0.5px;
@@ -591,6 +591,9 @@ header {
   padding-left: 60px;
   padding-right: 60px;
   padding-bottom: 50px;
+  text-align: center;
+  background-color: #f4f4f4;
+  padding: 100px 60px;
 }
 
 #projects .masonry {
@@ -614,14 +617,14 @@ header {
 /* Video Presentation Style */
 
 #video {
-  text-align: center;
-  background-color: #f4f4f4;
-  padding: 100px 60px;
+  padding-left: 60px;
+  padding-right: 60px;
+  padding-bottom: 50px;
 }
 
 #video .section-heading {
   margin-bottom: 30px;
-  text-align: center;
+  text-align: left;
 }
 
 #video .section-heading h1 {
@@ -719,6 +722,9 @@ header {
   padding-left: 60px;
   padding-right: 60px;
   padding-bottom: 80px;
+  text-align: center;
+  background-color: #f4f4f4;
+  padding: 100px 60px;
 }
 
 #blog .tabs {
@@ -747,7 +753,7 @@ header {
   text-transform: capitalize;
   letter-spacing: 0.5px;
   color: #232323;
-  font-size: 19px;
+  font-size: 24px;
   line-height: 80px;
   font-weight: 600;
   transition: 0.5s;
@@ -812,7 +818,7 @@ header {
   padding-top: 7.5px;
   margin-top: 0px;
   margin-bottom: 5px;
-  font-size: 21px;
+  font-size: 26px;
   font-weight: 600;
   color: #232323;
   letter-spacing: 0.5px;
@@ -820,7 +826,7 @@ header {
 
 #blog .item .text-content span {
   display: inline-block;
-  font-size: 15px;
+  font-size: 20px;
   font-weight: 600;
   color: #7a7a7a;
   letter-spacing: 0.5px;
@@ -849,7 +855,7 @@ header {
 #contact input {
   border-radius: 0px;
   padding-left: 15px;
-  font-size: 13px;
+  font-size: 18px;
   color: #aaa;
   background-color: #f4f4f4;
   border: 1px solid #eee;
@@ -865,7 +871,7 @@ header {
   border-radius: 0px;
   padding-left: 15px;
   padding-top: 10px;
-  font-size: 13px;
+  font-size: 18px;
   color: #aaa;
   background-color: #f4f4f4;
   border: 1px solid #eee;
@@ -879,7 +885,7 @@ header {
 }
 
 #contact button {
-  font-size: 13px;
+  font-size: 18px;
   border-radius: 0px;
   font-weight: 600;
   color: #fff;
@@ -916,7 +922,7 @@ header {
 
 .footer p {
   margin-bottom: 0px;
-  font-size: 13px;
+  font-size: 18px;
   line-height: 80px;
   color: #fff;
   letter-spacing: 0.5px;
@@ -940,11 +946,11 @@ header {
   }
 
   .sidebar-navigation .logo a {
-    font-size: 18px;
+    font-size: 23px;
   }
 
   .sidebar-navigation nav a {
-    font-size: 13px;
+    font-size: 18px;
   }
 
   .sidebar-navigation nav ul {
@@ -952,7 +958,7 @@ header {
   }
 
   .sidebar-navigation .social-icons li a {
-    font-size: 15px;
+    font-size: 20px;
   }
 
 }
@@ -1050,7 +1056,7 @@ header {
   }
 
   #blog .tabs a {
-    font-size: 13px;
+    font-size: 18px;
   }
 
   #blog .tabgroup ul li img {
