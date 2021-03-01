@@ -87,6 +87,7 @@ main {
   margin: 2rem 0rem;
   padding: 1rem 5rem;
   align-items: center;
+  color: orange;
 }
 .link h2 {
   padding: 0rem 2rem;
@@ -180,4 +181,28 @@ main {
   background: linear-gradient(to right top, #65dfc9, #6cdbeb);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
+}
+
+a:link {
+  color: #658ec6;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:visited {
+  color: #658ec6;
+  background-color: transparent;
+  text-decoration: none;
+}
+
+a:hover {
+  color: #658ec6;
+  background-color: transparent;
+  text-decoration: underline;
+}
+
+a:active {
+  color: #658ec6;
+  background-color: transparent;
+  text-decoration: underline;
 }
