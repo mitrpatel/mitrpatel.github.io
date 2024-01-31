@@ -6,23 +6,23 @@
             http://www.sitemaps.org/schemas/sitemap/0.9/sitemap.xsd">
 
 <url>
-  <loc>http://mitpatel.me/</loc>
+  <loc>http://tilakpatel.me/</loc>
   <changefreq>weekly</changefreq>
   <priority>1.00</priority>
 </url>
 <url>
-  <loc>http://mitpatel.me/main.html</loc>
+  <loc>http://tilakpatel.me/main.html</loc>
   <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://mitpatel.me/Mit%20Patel%20-%20Resume.pdf</loc>
+  <loc>http://tilakpatel.me/Tilak%20Patel%20-%20Resume.pdf</loc>
   <lastmod>2014-11-11T16:58:00+00:00</lastmod>
   <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
 <url>
-  <loc>http://mitpatel.me/index.html</loc>
+  <loc>http://tilakpatel.me/index.html</loc>
   <changefreq>weekly</changefreq>
   <priority>0.80</priority>
 </url>
