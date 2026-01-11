@@ -1,0 +1,297 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MitCash - Personal Finance Tracker</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+</head>
+<body>
+    <!-- Login Screen -->
+    <div id="login-screen" class="login-screen">
+        <div class="login-container">
+            <h1>MitCash</h1>
+            <p>Personal Finance Tracker</p>
+            <div class="login-form">
+                <input type="password" id="password-input" placeholder="Enter password" autocomplete="current-password">
+                <button id="login-btn" onclick="handleLogin()">Login</button>
+                <p id="login-error" class="error-message"></p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main App -->
+    <div id="app" class="app hidden">
+        <!-- Navigation -->
+        <nav class="navbar">
+            <div class="nav-brand">
+                <h1>MitCash</h1>
+            </div>
+            <div class="nav-links">
+                <button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard')">Dashboard</button>
+                <button class="nav-btn" data-view="income" onclick="showView('income')">Income</button>
+                <button class="nav-btn" data-view="expenses" onclick="showView('expenses')">Expenses</button>
+                <button class="nav-btn" data-view="bills" onclick="showView('bills')">Bills</button>
+                <button class="nav-btn" data-view="analytics" onclick="showView('analytics')">Analytics</button>
+            </div>
+            <div class="nav-actions">
+                <select id="month-filter" onchange="handleMonthChange()">
+                    <!-- Months will be populated dynamically -->
+                </select>
+                <button class="logout-btn" onclick="handleLogout()">Logout</button>
+            </div>
+            <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
+                <span></span>
+                <span></span>
+                <span></span>
+            </button>
+        </nav>
+
+        <!-- Mobile Menu -->
+        <div id="mobile-menu" class="mobile-menu hidden">
+            <button class="nav-btn active" data-view="dashboard" onclick="showView('dashboard'); toggleMobileMenu()">Dashboard</button>
+            <button class="nav-btn" data-view="income" onclick="showView('income'); toggleMobileMenu()">Income</button>
+            <button class="nav-btn" data-view="expenses" onclick="showView('expenses'); toggleMobileMenu()">Expenses</button>
+            <button class="nav-btn" data-view="bills" onclick="showView('bills'); toggleMobileMenu()">Bills</button>
+            <button class="nav-btn" data-view="analytics" onclick="showView('analytics'); toggleMobileMenu()">Analytics</button>
+            <select id="month-filter-mobile" onchange="handleMonthChange(true)">
+                <!-- Months will be populated dynamically -->
+            </select>
+            <button class="logout-btn" onclick="handleLogout()">Logout</button>
+        </div>
+
+        <!-- Main Content -->
+        <main class="main-content">
+            <!-- Dashboard View -->
+            <section id="dashboard-view" class="view active">
+                <h2>Dashboard</h2>
+                <div class="summary-cards">
+                    <div class="summary-card income-card">
+                        <h3>Total Income</h3>
+                        <p id="total-income">$0.00</p>
+                    </div>
+                    <div class="summary-card expense-card">
+                        <h3>Total Expenses</h3>
+                        <p id="total-expenses">$0.00</p>
+                    </div>
+                    <div class="summary-card savings-card">
+                        <h3>Net Savings</h3>
+                        <p id="net-savings">$0.00</p>
+                    </div>
+                    <div class="summary-card bills-card">
+                        <h3>Credit Card Bills</h3>
+                        <p id="total-bills">$0.00</p>
+                    </div>
+                </div>
+                <div class="dashboard-charts">
+                    <div class="chart-container">
+                        <h3>Expense Breakdown</h3>
+                        <canvas id="dashboard-pie-chart"></canvas>
+                    </div>
+                    <div class="chart-container">
+                        <h3>Monthly Overview</h3>
+                        <canvas id="dashboard-bar-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+
+            <!-- Income View -->
+            <section id="income-view" class="view hidden">
+                <div class="view-header">
+                    <h2>Income</h2>
+                    <button class="add-btn" onclick="openModal('income')">+ Add Income</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Source</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="income-table-body">
+                            <!-- Income entries will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="view-total">
+                    <strong>Total: <span id="income-view-total">$0.00</span></strong>
+                </div>
+            </section>
+
+            <!-- Expenses View -->
+            <section id="expenses-view" class="view hidden">
+                <div class="view-header">
+                    <h2>Expenses</h2>
+                    <div class="view-controls">
+                        <select id="category-filter" onchange="filterExpensesByCategory()">
+                            <option value="all">All Categories</option>
+                            <option value="Rent">Rent</option>
+                            <option value="Utilities">Utilities</option>
+                            <option value="Groceries">Groceries</option>
+                            <option value="Transportation">Transportation</option>
+                            <option value="Investment">Investment</option>
+                            <option value="Eating Out">Eating Out</option>
+                            <option value="Donations">Donations</option>
+                        </select>
+                        <button class="add-btn" onclick="openModal('expense')">+ Add Expense</button>
+                    </div>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="expenses-table-body">
+                            <!-- Expense entries will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="view-total">
+                    <strong>Total: <span id="expenses-view-total">$0.00</span></strong>
+                </div>
+            </section>
+
+            <!-- Bills View -->
+            <section id="bills-view" class="view hidden">
+                <div class="view-header">
+                    <h2>Credit Card Bills</h2>
+                    <button class="add-btn" onclick="openModal('bill')">+ Add Bill</button>
+                </div>
+                <div class="table-container">
+                    <table class="data-table">
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Description</th>
+                                <th>Amount</th>
+                                <th>Actions</th>
+                            </tr>
+                        </thead>
+                        <tbody id="bills-table-body">
+                            <!-- Bill entries will be populated here -->
+                        </tbody>
+                    </table>
+                </div>
+                <div class="view-total">
+                    <strong>Total: <span id="bills-view-total">$0.00</span></strong>
+                </div>
+                <div class="available-savings">
+                    <strong>Available Savings (Income - Bills): <span id="available-savings">$0.00</span></strong>
+                </div>
+            </section>
+
+            <!-- Analytics View -->
+            <section id="analytics-view" class="view hidden">
+                <h2>Analytics</h2>
+                <div class="savings-summary">
+                    <div class="savings-card">
+                        <h3>Net Savings</h3>
+                        <p class="savings-formula">Income - Expenses</p>
+                        <p id="analytics-net-savings" class="savings-amount">$0.00</p>
+                    </div>
+                    <div class="savings-card">
+                        <h3>Available Savings</h3>
+                        <p class="savings-formula">Income - Credit Card Bills</p>
+                        <p id="analytics-available-savings" class="savings-amount">$0.00</p>
+                    </div>
+                </div>
+                <div class="analytics-charts">
+                    <div class="chart-container large">
+                        <h3>Expense Breakdown by Category</h3>
+                        <canvas id="category-pie-chart"></canvas>
+                    </div>
+                    <div class="chart-container large">
+                        <h3>Monthly Expense Comparison by Category</h3>
+                        <canvas id="monthly-category-chart"></canvas>
+                    </div>
+                    <div class="chart-container large">
+                        <h3>Income vs Expenses Trend</h3>
+                        <canvas id="trend-chart"></canvas>
+                    </div>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <!-- Modal -->
+    <div id="modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3 id="modal-title">Add Entry</h3>
+                <button class="close-btn" onclick="closeModal()">&times;</button>
+            </div>
+            <form id="entry-form" onsubmit="handleFormSubmit(event)">
+                <input type="hidden" id="entry-id">
+                <input type="hidden" id="entry-type">
+
+                <div class="form-group">
+                    <label for="entry-date">Date</label>
+                    <input type="date" id="entry-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry-description">Description</label>
+                    <input type="text" id="entry-description" required placeholder="Enter description">
+                </div>
+
+                <div class="form-group category-group hidden">
+                    <label for="entry-category">Category</label>
+                    <select id="entry-category">
+                        <option value="Rent">Rent</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Eating Out">Eating Out</option>
+                        <option value="Donations">Donations</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry-amount">Amount ($)</label>
+                    <input type="number" id="entry-amount" step="0.01" min="0" required placeholder="0.00">
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="closeModal()">Cancel</button>
+                    <button type="submit" class="submit-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="delete-modal" class="modal hidden">
+        <div class="modal-content small">
+            <div class="modal-header">
+                <h3>Confirm Delete</h3>
+                <button class="close-btn" onclick="closeDeleteModal()">&times;</button>
+            </div>
+            <p>Are you sure you want to delete this entry?</p>
+            <div class="form-actions">
+                <button type="button" class="cancel-btn" onclick="closeDeleteModal()">Cancel</button>
+                <button type="button" class="delete-btn" onclick="confirmDelete()">Delete</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="js/firebase-config.js"></script>
+    <script src="js/app.js"></script>
+</body>
+</html>
