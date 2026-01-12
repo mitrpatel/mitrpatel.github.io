@@ -93,19 +93,59 @@
                 <h2>Dashboard - 2026 Annual Overview</h2>
                 <div class="summary-cards">
                     <div class="summary-card income-card">
-                        <h3>Total Income</h3>
+                        <div class="header-with-info">
+                            <h3>Total Income</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Total Income</strong>
+                                    Sum of all income entries for the year 2026.
+                                    <div class="formula">Total = Sum of all income amounts</div>
+                                    <div class="example">Example: $5,000 + $5,000 + $500 = $10,500</div>
+                                </span>
+                            </span>
+                        </div>
                         <p id="total-income">$0.00</p>
                     </div>
                     <div class="summary-card expense-card">
-                        <h3>Total Expenses</h3>
+                        <div class="header-with-info">
+                            <h3>Total Expenses</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Total Expenses</strong>
+                                    Sum of all expense entries for the year 2026 (excludes credit card bills).
+                                    <div class="formula">Total = Sum of all expense amounts</div>
+                                    <div class="example">Example: $1,500 (Rent) + $200 (Groceries) + $100 (Gas) = $1,800</div>
+                                </span>
+                            </span>
+                        </div>
                         <p id="total-expenses">$0.00</p>
                     </div>
                     <div class="summary-card savings-card">
-                        <h3>Net Savings</h3>
+                        <div class="header-with-info">
+                            <h3>Net Savings</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Net Savings</strong>
+                                    Your income minus your expenses. Green means you saved money, red means you overspent.
+                                    <div class="formula">Net Savings = Total Income - Total Expenses</div>
+                                    <div class="example">Example: $10,500 - $1,800 = $8,700 saved</div>
+                                </span>
+                            </span>
+                        </div>
                         <p id="net-savings">$0.00</p>
                     </div>
                     <div class="summary-card bills-card">
-                        <h3>Credit Card Bills</h3>
+                        <div class="header-with-info">
+                            <h3>Credit Card Bills</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Credit Card Bills</strong>
+                                    Sum of all credit card bill payments for the year. Tracked separately from expenses.
+                                    <div class="formula">Total = Sum of all bill payments</div>
+                                    <div class="example">Example: $500 (Chase) + $300 (Amex) = $800</div>
+                                </span>
+                            </span>
+                        </div>
                         <p id="total-bills">$0.00</p>
                     </div>
                 </div>
@@ -113,7 +153,17 @@
                 <!-- Income vs Expenses Gauge -->
                 <div class="gauge-section">
                     <div class="gauge-container">
-                        <h3>Spending Rate</h3>
+                        <div class="header-with-info">
+                            <h3>Spending Rate</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Spending Rate</strong>
+                                    Percentage of your income that you've spent on expenses.
+                                    <div class="formula">Rate = (Total Expenses / Total Income) × 100</div>
+                                    <div class="example">Example: $8,000 spent / $10,000 income = 80% spending rate. Lower is better!</div>
+                                </span>
+                            </span>
+                        </div>
                         <div class="gauge-wrapper">
                             <canvas id="spending-gauge"></canvas>
                             <div class="gauge-label">
@@ -123,7 +173,17 @@
                         </div>
                     </div>
                     <div class="top-expenses-container">
-                        <h3>Top 10 Expenses (Annual)</h3>
+                        <div class="header-with-info">
+                            <h3>Top 10 Expenses (Annual)</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Top 10 Expenses</strong>
+                                    Your 10 largest individual expense transactions for the year, sorted by amount.
+                                    <div class="formula">Sorted by: Amount (highest first)</div>
+                                    <div class="example">Helps identify your biggest spending to find savings opportunities.</div>
+                                </span>
+                            </span>
+                        </div>
                         <div id="top-expenses-list" class="top-expenses-list">
                             <!-- Will be populated dynamically -->
                         </div>
@@ -133,7 +193,17 @@
                 <!-- Monthly Summary Section -->
                 <div class="monthly-summary-section">
                     <div class="monthly-summary-header">
-                        <h3>Monthly Summary</h3>
+                        <div class="header-with-info">
+                            <h3>Monthly Summary</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Monthly Summary</strong>
+                                    Financial snapshot for the selected month. Use the dropdown to view different months.
+                                    <div class="formula">Shows: Income, Expenses, Net Savings, and Bills for selected month</div>
+                                    <div class="example">Compare month-to-month to track your progress.</div>
+                                </span>
+                            </span>
+                        </div>
                         <select id="dashboard-month-filter" onchange="handleDashboardMonthChange()">
                             <!-- Months will be populated dynamically -->
                         </select>
@@ -160,7 +230,17 @@
 
                 <!-- Category Trends Section -->
                 <div class="category-trends-section">
-                    <h3>Category Spending Trends</h3>
+                    <div class="header-with-info">
+                        <h3>Category Spending Trends</h3>
+                        <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                            <span class="tooltip-content">
+                                <strong>Category Spending Trends</strong>
+                                Shows spending per category with mini charts (sparklines) showing monthly patterns. The % shows change from previous 3 months.
+                                <div class="formula">Trend % = ((Recent 3 months - Previous 3 months) / Previous 3 months) × 100</div>
+                                <div class="example">Red % = spending increased, Green % = spending decreased</div>
+                            </span>
+                        </span>
+                    </div>
                     <div id="category-trends-grid" class="category-trends-grid">
                         <!-- Will be populated dynamically with sparklines -->
                     </div>
@@ -168,11 +248,31 @@
 
                 <div class="dashboard-charts">
                     <div class="chart-container full-width">
-                        <h3>Expenses by Category by Month</h3>
+                        <div class="header-with-info">
+                            <h3>Expenses by Category by Month</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Expenses by Category by Month</strong>
+                                    Stacked bar chart showing how your spending is distributed across categories each month.
+                                    <div class="formula">Each bar = Total monthly expenses, split by category</div>
+                                    <div class="example">Helps identify which categories dominate your spending each month.</div>
+                                </span>
+                            </span>
+                        </div>
                         <canvas id="dashboard-category-month-chart"></canvas>
                     </div>
                     <div class="chart-container full-width">
-                        <h3>Income Flow (Waterfall)</h3>
+                        <div class="header-with-info">
+                            <h3>Income Flow (Waterfall)</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Income Flow (Waterfall)</strong>
+                                    Shows how your income flows through expenses to final savings. Start with income, subtract each category, end with net savings.
+                                    <div class="formula">Income - Category1 - Category2 - ... = Net Savings</div>
+                                    <div class="example">Example: $10,000 - $1,500 (Rent) - $500 (Food) = $8,000 remaining</div>
+                                </span>
+                            </span>
+                        </div>
                         <canvas id="waterfall-chart"></canvas>
                     </div>
                 </div>
@@ -293,12 +393,32 @@
                 <h2>Analytics - 2026 Annual Overview</h2>
                 <div class="savings-summary">
                     <div class="savings-card">
-                        <h3>Net Savings</h3>
+                        <div class="header-with-info" style="justify-content: center;">
+                            <h3>Net Savings</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Net Savings</strong>
+                                    Total income minus total expenses for the year.
+                                    <div class="formula">Net Savings = Total Income - Total Expenses</div>
+                                    <div class="example">Example: $60,000 income - $45,000 expenses = $15,000 net savings</div>
+                                </span>
+                            </span>
+                        </div>
                         <p class="savings-formula">Income - Expenses</p>
                         <p id="analytics-net-savings" class="savings-amount">$0.00</p>
                     </div>
                     <div class="savings-card">
-                        <h3>Available Savings</h3>
+                        <div class="header-with-info" style="justify-content: center;">
+                            <h3>Available Savings</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Available Savings</strong>
+                                    Income minus credit card bills only. Shows cash available after paying cards.
+                                    <div class="formula">Available = Total Income - Credit Card Bills</div>
+                                    <div class="example">Example: $60,000 income - $40,000 bills = $20,000 available</div>
+                                </span>
+                            </span>
+                        </div>
                         <p class="savings-formula">Income - Credit Card Bills</p>
                         <p id="analytics-available-savings" class="savings-amount">$0.00</p>
                     </div>
@@ -306,25 +426,75 @@
 
                 <!-- Financial Projections Section -->
                 <div class="projections-section">
-                    <h3>Financial Projections (End of Year)</h3>
+                    <div class="header-with-info">
+                        <h3>Financial Projections (End of Year)</h3>
+                        <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                            <span class="tooltip-content">
+                                <strong>Financial Projections</strong>
+                                Estimates your year-end totals based on your current monthly averages extended to 12 months.
+                                <div class="formula">Projection = (Year-to-date Total / Months Elapsed) × 12</div>
+                                <div class="example">Example: $15,000 over 3 months = $5,000/mo avg × 12 = $60,000 projected</div>
+                            </span>
+                        </span>
+                    </div>
                     <div class="projections-grid">
                         <div class="projection-card">
-                            <h4>Projected Annual Income</h4>
+                            <div class="header-with-info" style="justify-content: center;">
+                                <h4>Projected Annual Income</h4>
+                                <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                    <span class="tooltip-content">
+                                        <strong>Projected Annual Income</strong>
+                                        Your average monthly income extrapolated to a full year.
+                                        <div class="formula">(Total Income ÷ Months Elapsed) × 12</div>
+                                        <div class="example">$15,000 over 3 months = $60,000 projected annual</div>
+                                    </span>
+                                </span>
+                            </div>
                             <p id="projected-income">$0.00</p>
                             <span class="projection-note">Based on current average</span>
                         </div>
                         <div class="projection-card">
-                            <h4>Projected Annual Expenses</h4>
+                            <div class="header-with-info" style="justify-content: center;">
+                                <h4>Projected Annual Expenses</h4>
+                                <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                    <span class="tooltip-content">
+                                        <strong>Projected Annual Expenses</strong>
+                                        Your average monthly expenses extrapolated to a full year.
+                                        <div class="formula">(Total Expenses ÷ Months Elapsed) × 12</div>
+                                        <div class="example">$9,000 over 3 months = $36,000 projected annual</div>
+                                    </span>
+                                </span>
+                            </div>
                             <p id="projected-expenses">$0.00</p>
                             <span class="projection-note">Based on current average</span>
                         </div>
                         <div class="projection-card">
-                            <h4>Projected Net Savings</h4>
+                            <div class="header-with-info" style="justify-content: center;">
+                                <h4>Projected Net Savings</h4>
+                                <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                    <span class="tooltip-content">
+                                        <strong>Projected Net Savings</strong>
+                                        How much you're expected to save by year end if current trends continue.
+                                        <div class="formula">Projected Income - Projected Expenses</div>
+                                        <div class="example">$60,000 - $36,000 = $24,000 projected savings</div>
+                                    </span>
+                                </span>
+                            </div>
                             <p id="projected-savings">$0.00</p>
                             <span class="projection-note">If trends continue</span>
                         </div>
                         <div class="projection-card">
-                            <h4>Projected Savings Rate</h4>
+                            <div class="header-with-info" style="justify-content: center;">
+                                <h4>Projected Savings Rate</h4>
+                                <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                    <span class="tooltip-content">
+                                        <strong>Projected Savings Rate</strong>
+                                        Percentage of income you're on track to save. Green ≥20%, Yellow 10-19%, Red <10%.
+                                        <div class="formula">(Projected Savings ÷ Projected Income) × 100</div>
+                                        <div class="example">$24,000 ÷ $60,000 = 40% savings rate</div>
+                                    </span>
+                                </span>
+                            </div>
                             <p id="projected-savings-rate">0%</p>
                             <span class="projection-note">Of total income</span>
                         </div>
@@ -333,11 +503,31 @@
 
                 <div class="analytics-charts">
                     <div class="chart-container extra-large full-width">
-                        <h3>Expense Breakdown by Category</h3>
+                        <div class="header-with-info">
+                            <h3>Expense Breakdown by Category</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Expense Breakdown by Category</strong>
+                                    Pie chart showing what percentage of your total expenses goes to each category.
+                                    <div class="formula">Category % = (Category Total ÷ Total Expenses) × 100</div>
+                                    <div class="example">Example: $3,000 Rent ÷ $10,000 total = 30% of expenses</div>
+                                </span>
+                            </span>
+                        </div>
                         <canvas id="category-pie-chart"></canvas>
                     </div>
                     <div class="chart-container extra-large full-width">
-                        <h3>Income vs Expenses Trend</h3>
+                        <div class="header-with-info">
+                            <h3>Income vs Expenses Trend</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Income vs Expenses Trend</strong>
+                                    Line chart showing monthly income, expenses, and net savings over time.
+                                    <div class="formula">Net Savings line = Income line - Expenses line</div>
+                                    <div class="example">When green (income) is above red (expenses), you're saving money that month.</div>
+                                </span>
+                            </span>
+                        </div>
                         <canvas id="trend-chart"></canvas>
                     </div>
                 </div>
@@ -345,7 +535,17 @@
                 <!-- Category Deep-Dive Section -->
                 <div class="category-deepdive-section">
                     <div class="deepdive-header">
-                        <h3>Category Deep-Dive</h3>
+                        <div class="header-with-info">
+                            <h3>Category Deep-Dive</h3>
+                            <span class="info-tooltip" onclick="this.classList.toggle('active')">i
+                                <span class="tooltip-content">
+                                    <strong>Category Deep-Dive</strong>
+                                    Select a category to see detailed stats and all transactions for that category.
+                                    <div class="formula">Monthly Avg = Total Spent ÷ Months with transactions</div>
+                                    <div class="example">Helps you analyze spending patterns within specific categories.</div>
+                                </span>
+                            </span>
+                        </div>
                         <select id="deepdive-category-select" onchange="updateCategoryDeepDive()">
                             <option value="">Select a category...</option>
                         </select>
@@ -549,7 +749,7 @@
     </div>
 
     <!-- Scripts -->
-    <script type="module" src="js/firebase-config.js"></script>
-    <script type="module" src="js/app.js"></script>
+    <script type="module" src="js/firebase-config.js?v=2.1"></script>
+    <script type="module" src="js/app.js?v=2.1"></script>
 </body>
 </html>
