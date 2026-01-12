@@ -425,6 +425,35 @@ body {
     margin-top: 0.5rem;
 }
 
+.mobile-menu-actions {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.5rem;
+    padding: 0.5rem 0;
+    border-top: 1px solid var(--border-color);
+    border-bottom: 1px solid var(--border-color);
+    margin: 0.5rem 0;
+}
+
+.mobile-action-btn {
+    flex: 1;
+    min-width: calc(50% - 0.25rem);
+    padding: 0.75rem 1rem;
+    background: var(--background-color);
+    border: 1px solid var(--border-color);
+    border-radius: var(--border-radius);
+    font-size: 0.85rem;
+    cursor: pointer;
+    transition: var(--transition);
+    text-align: center;
+}
+
+.mobile-action-btn:hover {
+    background: var(--primary-color);
+    color: white;
+    border-color: var(--primary-color);
+}
+
 /* Main Content */
 .main-content {
     padding: 2rem;
@@ -692,6 +721,16 @@ body {
 
 .delete-btn:hover {
     opacity: 0.9;
+}
+
+/* Delete button in modal (form-actions context) */
+.form-actions .delete-btn {
+    padding: 0.75rem 1.5rem;
+    border: none;
+    border-radius: var(--border-radius);
+    font-size: 0.9rem;
+    font-weight: 500;
+    cursor: pointer;
 }
 
 .category-badge {
@@ -974,7 +1013,8 @@ body {
     }
 
     .view-controls select,
-    .view-controls .add-btn {
+    .view-controls .add-btn,
+    .view-controls .recurring-btn {
         width: 100%;
     }
 
@@ -1035,6 +1075,43 @@ body {
     .view h2 {
         font-size: 1.5rem;
     }
+
+    .deepdive-stats {
+        grid-template-columns: 1fr;
+    }
+
+    .deepdive-stat p {
+        font-size: 1rem;
+    }
+
+    .projections-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .projection-card p {
+        font-size: 1.25rem;
+    }
+
+    .report-summary-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .modal-content {
+        margin: 0.5rem;
+        max-height: 95vh;
+    }
+
+    .warning-container h1 {
+        font-size: 1.25rem;
+    }
+
+    .warning-message {
+        font-size: 0.875rem;
+    }
+
+    .mobile-action-btn {
+        min-width: 100%;
+    }
 }
 
 /* ============================================
@@ -1067,6 +1144,23 @@ body {
 
 .dark-mode .loading {
     background: rgba(26, 26, 46, 0.9);
+}
+
+.dark-mode .mobile-menu {
+    background: #16213e;
+}
+
+.dark-mode .mobile-action-btn {
+    background: #1a1a2e;
+    color: var(--text-primary);
+}
+
+.dark-mode .view-controls select,
+.dark-mode .monthly-summary-header select,
+.dark-mode .report-controls select,
+.dark-mode .mobile-menu select {
+    background-color: #1a1a2e;
+    color: var(--text-primary);
 }
 
 .dark-mode-toggle {
