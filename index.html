@@ -78,6 +78,11 @@
             <button class="nav-btn" data-view="expenses" onclick="showView('expenses'); toggleMobileMenu()">Expenses</button>
             <button class="nav-btn" data-view="bills" onclick="showView('bills'); toggleMobileMenu()">Bills</button>
             <button class="nav-btn" data-view="analytics" onclick="showView('analytics'); toggleMobileMenu()">Analytics</button>
+            <div class="mobile-menu-actions">
+                <button class="mobile-action-btn" onclick="openCategoryModal(); toggleMobileMenu()">⚙️ Categories</button>
+                <button class="mobile-action-btn" onclick="openReportModal(); toggleMobileMenu()">📊 Report</button>
+                <button class="mobile-action-btn" onclick="openBillHistoryModal(); toggleMobileMenu()">📋 Bill History</button>
+            </div>
             <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
 
