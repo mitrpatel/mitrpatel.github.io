@@ -53,8 +53,8 @@ const defaultCategoryColors = {
     'Investment': '#8b5cf6',
     'Eating Out': '#ec4899',
     'Donations': '#6366f1',
-    'Other': '#6b7280',
     'Car Payment': '#14b8a6',
+    'Other': '#6b7280'
 };
 
 // Merged category colors (default + custom)
@@ -625,7 +625,7 @@ function updateDashboardCharts() {
         annualExpenseData
             .filter(expense => expense.category === category)
             .forEach(expense => {
-                const monthIndex = new Date(expense.date).getMonth();
+                const monthIndex = new Date(expense.date + 'T00:00:00').getMonth();
                 monthlyData[monthIndex] += expense.amount;
             });
 
@@ -906,12 +906,12 @@ function updateTrendChart() {
     const monthlyExpenses = new Array(12).fill(0);
 
     annualIncomeData.forEach(item => {
-        const monthIndex = new Date(item.date).getMonth();
+        const monthIndex = new Date(item.date + 'T00:00:00').getMonth();
         monthlyIncome[monthIndex] += item.amount;
     });
 
     annualExpenseData.forEach(item => {
-        const monthIndex = new Date(item.date).getMonth();
+        const monthIndex = new Date(item.date + 'T00:00:00').getMonth();
         monthlyExpenses[monthIndex] += item.amount;
     });
 
@@ -1235,7 +1235,7 @@ function updateCategoryTrends() {
         // Calculate monthly data for sparkline
         const monthlyData = new Array(12).fill(0);
         categoryExpenses.forEach(expense => {
-            const monthIndex = new Date(expense.date).getMonth();
+            const monthIndex = new Date(expense.date + 'T00:00:00').getMonth();
             monthlyData[monthIndex] += expense.amount;
         });
 
@@ -1267,7 +1267,7 @@ function updateCategoryTrends() {
         const categoryExpenses = annualExpenseData.filter(e => e.category === category);
         const monthlyData = new Array(12).fill(0);
         categoryExpenses.forEach(expense => {
-            const monthIndex = new Date(expense.date).getMonth();
+            const monthIndex = new Date(expense.date + 'T00:00:00').getMonth();
             monthlyData[monthIndex] += expense.amount;
         });
 
@@ -1417,7 +1417,7 @@ function updateCategoryDeepDive() {
     const total = categoryExpenses.reduce((sum, e) => sum + e.amount, 0);
     const totalAllExpenses = annualExpenseData.reduce((sum, e) => sum + e.amount, 0);
     const percentage = totalAllExpenses > 0 ? (total / totalAllExpenses) * 100 : 0;
-    const monthsWithData = new Set(categoryExpenses.map(e => new Date(e.date).getMonth())).size;
+    const monthsWithData = new Set(categoryExpenses.map(e => new Date(e.date + 'T00:00:00').getMonth())).size;
     const average = monthsWithData > 0 ? total / monthsWithData : 0;
 
     document.getElementById('deepdive-total').textContent = formatCurrency(total);
