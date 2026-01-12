@@ -53,7 +53,8 @@ const defaultCategoryColors = {
     'Investment': '#8b5cf6',
     'Eating Out': '#ec4899',
     'Donations': '#6366f1',
-    'Other': '#6b7280'
+    'Other': '#6b7280',
+    'Car Payment': '#14b8a6',
 };
 
 // Merged category colors (default + custom)
