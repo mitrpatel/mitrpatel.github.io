@@ -3,20 +3,43 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MitCash - Personal Finance Tracker</title>
+    <title>Security Warning - Access Denied</title>
     <link rel="stylesheet" href="css/styles.css">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
-    <!-- Login Screen -->
-    <div id="login-screen" class="login-screen">
-        <div class="login-container">
-            <h1>MitCash</h1>
-            <p>Personal Finance Tracker</p>
-            <div class="login-form">
-                <input type="password" id="password-input" placeholder="Enter password" autocomplete="current-password">
-                <button id="login-btn" onclick="handleLogin()">Login</button>
-                <p id="login-error" class="error-message"></p>
+    <!-- Fake Warning Screen -->
+    <div id="login-screen" class="warning-screen">
+        <div class="warning-container">
+            <div class="warning-icon">
+                <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 24 24" fill="currentColor">
+                    <path d="M12 2L1 21h22L12 2zm0 3.5L19.5 19h-15L12 5.5zM11 10v4h2v-4h-2zm0 6v2h2v-2h-2z"/>
+                </svg>
+            </div>
+            <h1>Connection Not Private</h1>
+            <p class="warning-message">Attackers might be trying to steal your information from this site (for example, passwords, messages, or credit cards).</p>
+            <p class="warning-code">NET::ERR_CERT_AUTHORITY_INVALID</p>
+            <div class="warning-details">
+                <p>This server could not prove that it is <strong>secure.gateway.net</strong>; its security certificate is not trusted by your computer's operating system.</p>
+            </div>
+            <div class="warning-form">
+                <button class="warning-btn-secondary" onclick="window.history.back()">Go Back</button>
+                <div class="advanced-section">
+                    <button class="advanced-toggle" onclick="toggleAdvanced()">Advanced</button>
+                    <div id="advanced-options" class="advanced-options hidden">
+                        <p class="advanced-text">Administrator verification required:</p>
+                        <button class="google-signin-btn" onclick="handleGoogleLogin()">
+                            <svg viewBox="0 0 24 24" width="18" height="18">
+                                <path fill="#4285F4" d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z"/>
+                                <path fill="#34A853" d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z"/>
+                                <path fill="#FBBC05" d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z"/>
+                                <path fill="#EA4335" d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z"/>
+                            </svg>
+                            Sign in with Google
+                        </button>
+                        <p id="login-error" class="error-message"></p>
+                    </div>
+                </div>
             </div>
         </div>
     </div>
@@ -36,9 +59,9 @@
                 <button class="nav-btn" data-view="analytics" onclick="showView('analytics')">Analytics</button>
             </div>
             <div class="nav-actions">
-                <select id="month-filter" onchange="handleMonthChange()">
-                    <!-- Months will be populated dynamically -->
-                </select>
+                <button class="nav-action-btn" onclick="openCategoryModal()" title="Manage Categories">⚙️</button>
+                <button class="nav-action-btn" onclick="openReportModal()" title="Generate Report">📊</button>
+                <button class="nav-action-btn" onclick="openBillHistoryModal()" title="Bill History">📋</button>
                 <button class="logout-btn" onclick="handleLogout()">Logout</button>
             </div>
             <button class="mobile-menu-btn" onclick="toggleMobileMenu()">
@@ -55,9 +78,6 @@
             <button class="nav-btn" data-view="expenses" onclick="showView('expenses'); toggleMobileMenu()">Expenses</button>
             <button class="nav-btn" data-view="bills" onclick="showView('bills'); toggleMobileMenu()">Bills</button>
             <button class="nav-btn" data-view="analytics" onclick="showView('analytics'); toggleMobileMenu()">Analytics</button>
-            <select id="month-filter-mobile" onchange="handleMonthChange(true)">
-                <!-- Months will be populated dynamically -->
-            </select>
             <button class="logout-btn" onclick="handleLogout()">Logout</button>
         </div>
 
@@ -65,7 +85,7 @@
         <main class="main-content">
             <!-- Dashboard View -->
             <section id="dashboard-view" class="view active">
-                <h2>Dashboard</h2>
+                <h2>Dashboard - 2026 Annual Overview</h2>
                 <div class="summary-cards">
                     <div class="summary-card income-card">
                         <h3>Total Income</h3>
@@ -84,14 +104,71 @@
                         <p id="total-bills">$0.00</p>
                     </div>
                 </div>
-                <div class="dashboard-charts">
-                    <div class="chart-container">
-                        <h3>Expense Breakdown</h3>
-                        <canvas id="dashboard-pie-chart"></canvas>
+
+                <!-- Income vs Expenses Gauge -->
+                <div class="gauge-section">
+                    <div class="gauge-container">
+                        <h3>Spending Rate</h3>
+                        <div class="gauge-wrapper">
+                            <canvas id="spending-gauge"></canvas>
+                            <div class="gauge-label">
+                                <span id="gauge-percentage">0%</span>
+                                <span class="gauge-sublabel">of income spent</span>
+                            </div>
+                        </div>
                     </div>
-                    <div class="chart-container">
-                        <h3>Monthly Overview</h3>
-                        <canvas id="dashboard-bar-chart"></canvas>
+                    <div class="top-expenses-container">
+                        <h3>Top 10 Expenses (Annual)</h3>
+                        <div id="top-expenses-list" class="top-expenses-list">
+                            <!-- Will be populated dynamically -->
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Monthly Summary Section -->
+                <div class="monthly-summary-section">
+                    <div class="monthly-summary-header">
+                        <h3>Monthly Summary</h3>
+                        <select id="dashboard-month-filter" onchange="handleDashboardMonthChange()">
+                            <!-- Months will be populated dynamically -->
+                        </select>
+                    </div>
+                    <div class="summary-cards">
+                        <div class="summary-card income-card">
+                            <h3>Monthly Income</h3>
+                            <p id="monthly-income">$0.00</p>
+                        </div>
+                        <div class="summary-card expense-card">
+                            <h3>Monthly Expenses</h3>
+                            <p id="monthly-expenses">$0.00</p>
+                        </div>
+                        <div class="summary-card savings-card">
+                            <h3>Monthly Net Savings</h3>
+                            <p id="monthly-net-savings">$0.00</p>
+                        </div>
+                        <div class="summary-card bills-card">
+                            <h3>Monthly Bills</h3>
+                            <p id="monthly-bills">$0.00</p>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Category Trends Section -->
+                <div class="category-trends-section">
+                    <h3>Category Spending Trends</h3>
+                    <div id="category-trends-grid" class="category-trends-grid">
+                        <!-- Will be populated dynamically with sparklines -->
+                    </div>
+                </div>
+
+                <div class="dashboard-charts">
+                    <div class="chart-container full-width">
+                        <h3>Expenses by Category by Month</h3>
+                        <canvas id="dashboard-category-month-chart"></canvas>
+                    </div>
+                    <div class="chart-container full-width">
+                        <h3>Income Flow (Waterfall)</h3>
+                        <canvas id="waterfall-chart"></canvas>
                     </div>
                 </div>
             </section>
@@ -100,7 +177,13 @@
             <section id="income-view" class="view hidden">
                 <div class="view-header">
                     <h2>Income</h2>
-                    <button class="add-btn" onclick="openModal('income')">+ Add Income</button>
+                    <div class="view-controls">
+                        <select id="income-month-filter" onchange="handleMonthChange('income')">
+                            <!-- Months will be populated dynamically -->
+                        </select>
+                        <button class="recurring-btn" onclick="populateRecurring('income')" title="Copy recurring transactions from previous month">🔄 Recurring</button>
+                        <button class="add-btn" onclick="openModal('income')">+ Add Income</button>
+                    </div>
                 </div>
                 <div class="table-container">
                     <table class="data-table">
@@ -127,6 +210,9 @@
                 <div class="view-header">
                     <h2>Expenses</h2>
                     <div class="view-controls">
+                        <select id="expenses-month-filter" onchange="handleMonthChange('expenses')">
+                            <!-- Months will be populated dynamically -->
+                        </select>
                         <select id="category-filter" onchange="filterExpensesByCategory()">
                             <option value="all">All Categories</option>
                             <option value="Rent">Rent</option>
@@ -137,6 +223,7 @@
                             <option value="Eating Out">Eating Out</option>
                             <option value="Donations">Donations</option>
                         </select>
+                        <button class="recurring-btn" onclick="populateRecurring('expense')" title="Copy recurring transactions from previous month">🔄 Recurring</button>
                         <button class="add-btn" onclick="openModal('expense')">+ Add Expense</button>
                     </div>
                 </div>
@@ -165,7 +252,13 @@
             <section id="bills-view" class="view hidden">
                 <div class="view-header">
                     <h2>Credit Card Bills</h2>
-                    <button class="add-btn" onclick="openModal('bill')">+ Add Bill</button>
+                    <div class="view-controls">
+                        <select id="bills-month-filter" onchange="handleMonthChange('bills')">
+                            <!-- Months will be populated dynamically -->
+                        </select>
+                        <button class="recurring-btn" onclick="populateRecurring('bill')" title="Copy recurring transactions from previous month">🔄 Recurring</button>
+                        <button class="add-btn" onclick="openModal('bill')">+ Add Bill</button>
+                    </div>
                 </div>
                 <div class="table-container">
                     <table class="data-table">
@@ -192,7 +285,7 @@
 
             <!-- Analytics View -->
             <section id="analytics-view" class="view hidden">
-                <h2>Analytics</h2>
+                <h2>Analytics - 2026 Annual Overview</h2>
                 <div class="savings-summary">
                     <div class="savings-card">
                         <h3>Net Savings</h3>
@@ -205,23 +298,120 @@
                         <p id="analytics-available-savings" class="savings-amount">$0.00</p>
                     </div>
                 </div>
+
+                <!-- Financial Projections Section -->
+                <div class="projections-section">
+                    <h3>Financial Projections (End of Year)</h3>
+                    <div class="projections-grid">
+                        <div class="projection-card">
+                            <h4>Projected Annual Income</h4>
+                            <p id="projected-income">$0.00</p>
+                            <span class="projection-note">Based on current average</span>
+                        </div>
+                        <div class="projection-card">
+                            <h4>Projected Annual Expenses</h4>
+                            <p id="projected-expenses">$0.00</p>
+                            <span class="projection-note">Based on current average</span>
+                        </div>
+                        <div class="projection-card">
+                            <h4>Projected Net Savings</h4>
+                            <p id="projected-savings">$0.00</p>
+                            <span class="projection-note">If trends continue</span>
+                        </div>
+                        <div class="projection-card">
+                            <h4>Projected Savings Rate</h4>
+                            <p id="projected-savings-rate">0%</p>
+                            <span class="projection-note">Of total income</span>
+                        </div>
+                    </div>
+                </div>
+
                 <div class="analytics-charts">
-                    <div class="chart-container large">
+                    <div class="chart-container extra-large full-width">
                         <h3>Expense Breakdown by Category</h3>
                         <canvas id="category-pie-chart"></canvas>
                     </div>
-                    <div class="chart-container large">
-                        <h3>Monthly Expense Comparison by Category</h3>
-                        <canvas id="monthly-category-chart"></canvas>
-                    </div>
-                    <div class="chart-container large">
+                    <div class="chart-container extra-large full-width">
                         <h3>Income vs Expenses Trend</h3>
                         <canvas id="trend-chart"></canvas>
                     </div>
                 </div>
+
+                <!-- Category Deep-Dive Section -->
+                <div class="category-deepdive-section">
+                    <div class="deepdive-header">
+                        <h3>Category Deep-Dive</h3>
+                        <select id="deepdive-category-select" onchange="updateCategoryDeepDive()">
+                            <option value="">Select a category...</option>
+                        </select>
+                    </div>
+                    <div id="deepdive-content" class="deepdive-content hidden">
+                        <div class="deepdive-stats">
+                            <div class="deepdive-stat">
+                                <h4>Total Spent</h4>
+                                <p id="deepdive-total">$0.00</p>
+                            </div>
+                            <div class="deepdive-stat">
+                                <h4>Monthly Average</h4>
+                                <p id="deepdive-average">$0.00</p>
+                            </div>
+                            <div class="deepdive-stat">
+                                <h4>Transaction Count</h4>
+                                <p id="deepdive-count">0</p>
+                            </div>
+                            <div class="deepdive-stat">
+                                <h4>% of Total Expenses</h4>
+                                <p id="deepdive-percentage">0%</p>
+                            </div>
+                        </div>
+                        <div class="deepdive-transactions">
+                            <h4>All Transactions</h4>
+                            <div id="deepdive-table-container" class="table-container">
+                                <table class="data-table">
+                                    <thead>
+                                        <tr>
+                                            <th>Date</th>
+                                            <th>Description</th>
+                                            <th>Amount</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody id="deepdive-table-body">
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
             </section>
         </main>
+
+        <!-- Global Search Bar -->
+        <div id="search-overlay" class="search-overlay hidden">
+            <div class="search-container">
+                <div class="search-header">
+                    <input type="text" id="global-search-input" placeholder="Search transactions..." oninput="handleGlobalSearch()">
+                    <button class="close-btn" onclick="closeSearchOverlay()">&times;</button>
+                </div>
+                <div id="search-results" class="search-results">
+                    <!-- Search results will be populated here -->
+                </div>
+            </div>
+        </div>
+
+        <!-- Quick Add Floating Button -->
+        <button id="quick-add-btn" class="quick-add-btn" onclick="openQuickAddMenu()">+</button>
+        <div id="quick-add-menu" class="quick-add-menu hidden">
+            <button onclick="openModal('expense'); closeQuickAddMenu()">Add Expense</button>
+            <button onclick="openModal('income'); closeQuickAddMenu()">Add Income</button>
+            <button onclick="openModal('bill'); closeQuickAddMenu()">Add Bill</button>
+            <button onclick="openSearchOverlay(); closeQuickAddMenu()">Search</button>
+        </div>
     </div>
+
+    <!-- Dark Mode Toggle -->
+    <button id="dark-mode-toggle" class="dark-mode-toggle" onclick="toggleDarkMode()">
+        <span id="dark-mode-icon">🌙</span>
+    </button>
 
     <!-- Modal -->
     <div id="modal" class="modal hidden">
@@ -247,19 +437,30 @@
                 <div class="form-group category-group hidden">
                     <label for="entry-category">Category</label>
                     <select id="entry-category">
-                        <option value="Rent">Rent</option>
-                        <option value="Utilities">Utilities</option>
-                        <option value="Groceries">Groceries</option>
-                        <option value="Transportation">Transportation</option>
-                        <option value="Investment">Investment</option>
-                        <option value="Eating Out">Eating Out</option>
-                        <option value="Donations">Donations</option>
+                        <!-- Categories will be populated dynamically -->
                     </select>
                 </div>
 
                 <div class="form-group">
                     <label for="entry-amount">Amount ($)</label>
                     <input type="number" id="entry-amount" step="0.01" min="0" required placeholder="0.00">
+                </div>
+
+                <div class="form-group">
+                    <label for="entry-notes">Notes (optional)</label>
+                    <textarea id="entry-notes" rows="2" placeholder="Add additional details..."></textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry-tags">Tags (optional)</label>
+                    <input type="text" id="entry-tags" placeholder="e.g., vacation, business, emergency (comma separated)">
+                </div>
+
+                <div class="form-group recurring-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" id="entry-recurring">
+                        <span>Recurring transaction (monthly)</span>
+                    </label>
                 </div>
 
                 <div class="form-actions">
@@ -285,13 +486,65 @@
         </div>
     </div>
 
-    <!-- Loading Overlay -->
+    <!-- Loading Overlay (shown by default during initialization) -->
     <div id="loading" class="loading hidden">
         <div class="spinner"></div>
     </div>
 
+    <!-- Category Management Modal -->
+    <div id="category-modal" class="modal hidden">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h3>Manage Categories</h3>
+                <button class="close-btn" onclick="closeCategoryModal()">&times;</button>
+            </div>
+            <div class="category-management">
+                <div class="add-category-form">
+                    <input type="text" id="new-category-name" placeholder="New category name">
+                    <input type="color" id="new-category-color" value="#6366f1">
+                    <button class="add-btn" onclick="addCustomCategory()">Add</button>
+                </div>
+                <div id="category-list" class="category-list">
+                    <!-- Categories will be populated dynamically -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Monthly Report Modal -->
+    <div id="report-modal" class="modal hidden">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Monthly Financial Report</h3>
+                <button class="close-btn" onclick="closeReportModal()">&times;</button>
+            </div>
+            <div class="report-controls">
+                <select id="report-month-select" onchange="generateReport()">
+                    <!-- Months will be populated dynamically -->
+                </select>
+                <button class="add-btn" onclick="printReport()">Print Report</button>
+            </div>
+            <div id="report-content" class="report-content">
+                <!-- Report will be generated here -->
+            </div>
+        </div>
+    </div>
+
+    <!-- Bill Payment History Modal -->
+    <div id="bill-history-modal" class="modal hidden">
+        <div class="modal-content large">
+            <div class="modal-header">
+                <h3>Bill Payment History</h3>
+                <button class="close-btn" onclick="closeBillHistoryModal()">&times;</button>
+            </div>
+            <div id="bill-history-content" class="bill-history-content">
+                <!-- Bill history will be populated here -->
+            </div>
+        </div>
+    </div>
+
     <!-- Scripts -->
-    <script src="js/firebase-config.js"></script>
-    <script src="js/app.js"></script>
+    <script type="module" src="js/firebase-config.js"></script>
+    <script type="module" src="js/app.js"></script>
 </body>
 </html>
