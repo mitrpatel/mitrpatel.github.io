@@ -574,6 +574,7 @@ body {
     margin-left: 0.5rem;
     flex-shrink: 0;
     vertical-align: middle;
+    transform: translateY(-1px);
 }
 
 .info-tooltip:hover {
@@ -645,12 +646,25 @@ body {
 
 /* Header with info tooltip */
 .header-with-info {
-    display: flex;
+    display: inline-flex;
     align-items: center;
+    gap: 0;
+    line-height: 1.2;
+    flex-wrap: nowrap;
 }
 
-.header-with-info h3 {
-    margin: 0;
+.header-with-info h3,
+.header-with-info h4 {
+    margin: 0 !important;
+    margin-bottom: 0 !important;
+    line-height: 1.2;
+    white-space: nowrap;
+}
+
+.header-with-info .info-tooltip {
+    align-self: center;
+    position: relative;
+    top: 0;
 }
 
 /* Dashboard Charts */
@@ -860,7 +874,7 @@ body {
     font-size: 1.125rem;
 }
 
-/* Savings Summary */
+/* Savings Summary (Analytics page only) */
 .savings-summary {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
@@ -868,7 +882,7 @@ body {
     margin-bottom: 2rem;
 }
 
-.savings-card {
+.savings-summary .savings-card {
     background: var(--card-background);
     padding: 2rem;
     border-radius: var(--border-radius);
@@ -876,7 +890,7 @@ body {
     text-align: center;
 }
 
-.savings-card h3 {
+.savings-summary .savings-card h3 {
     font-size: 1.125rem;
     color: var(--text-primary);
     margin-bottom: 0.5rem;
@@ -1418,10 +1432,17 @@ body {
     box-shadow: var(--shadow);
 }
 
-.top-expenses-container h3 {
+.top-expenses-container > h3,
+.top-expenses-container > .header-with-info {
     font-size: 1rem;
     color: var(--text-secondary);
     margin-bottom: 1rem;
+}
+
+.top-expenses-container .header-with-info h3 {
+    font-size: 1rem;
+    color: var(--text-secondary);
+    margin: 0;
 }
 
 .top-expenses-list {
