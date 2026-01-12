@@ -52,7 +52,8 @@ const defaultCategoryColors = {
     'Transportation': '#3b82f6',
     'Investment': '#8b5cf6',
     'Eating Out': '#ec4899',
-    'Donations': '#6366f1'
+    'Donations': '#6366f1',
+    'Other': '#6b7280'
 };
 
 // Merged category colors (default + custom)
