@@ -158,7 +158,6 @@ async function handleLogout() {
 
     document.getElementById('app').classList.add('hidden');
     document.getElementById('login-screen').classList.remove('hidden');
-    document.getElementById('password-input').value = '';
     document.getElementById('advanced-options').classList.add('hidden');
     document.title = 'Security Warning - Access Denied';
 }
@@ -1064,7 +1063,8 @@ function handleGlobalSearch() {
     resultsContainer.innerHTML = results.slice(0, 50).map(item => {
         const desc = item.source || item.description;
         const typeLabel = item.type.charAt(0).toUpperCase() + item.type.slice(1);
-        const colorClass = item.type === 'income' ? 'color: var(--success-color)' : 'color: var(--danger-color)';
+        const colorClass = item.type === 'income' ? 'color: var(--success-color)' :
+                          item.type === 'bill' ? 'color: var(--warning-color)' : 'color: var(--danger-color)';
         const tags = item.tags && item.tags.length > 0 ?
             `<div class="transaction-tags">${item.tags.map(t => `<span class="tag-badge">${escapeHtml(t)}</span>`).join('')}</div>` : '';
 
@@ -1173,7 +1173,7 @@ function updateTopExpenses() {
         <div class="top-expense-item">
             <div class="top-expense-info">
                 <div class="top-expense-desc">${escapeHtml(expense.description)}</div>
-                <div class="top-expense-meta">${formatDate(expense.date)} • ${expense.category}</div>
+                <div class="top-expense-meta">${formatDate(expense.date)} • ${expense.category || 'Other'}</div>
             </div>
             <div class="top-expense-amount">${formatCurrency(expense.amount)}</div>
         </div>
