@@ -25,16 +25,31 @@
     box-sizing: border-box;
 }
 
+html {
+    overflow-x: hidden;
+    width: 100%;
+}
+
 body {
     font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
     background-color: var(--background-color);
     color: var(--text-primary);
     line-height: 1.6;
     min-height: 100vh;
+    overflow-x: hidden;
+    width: 100%;
+    position: relative;
 }
 
 .hidden {
     display: none !important;
+}
+
+/* App Container */
+#app,
+.app {
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* ============================================
@@ -308,6 +323,8 @@ body {
     position: sticky;
     top: 0;
     z-index: 100;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .nav-brand h1 {
@@ -459,11 +476,15 @@ body {
     padding: 2rem;
     max-width: 1400px;
     margin: 0 auto;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* View Sections */
 .view {
     animation: fadeIn 0.3s ease;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 @keyframes fadeIn {
@@ -483,6 +504,7 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
+    width: 100%;
 }
 
 /* Monthly Summary Section */
@@ -492,6 +514,8 @@ body {
     background: var(--card-background);
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .monthly-summary-header {
@@ -601,6 +625,7 @@ body {
     box-shadow: var(--shadow-lg);
     transition: opacity 0.2s, visibility 0.2s;
     text-align: left;
+    word-wrap: break-word;
 }
 
 .info-tooltip .tooltip-content::after {
@@ -673,6 +698,8 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
     gap: 1.5rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .chart-container {
@@ -680,6 +707,8 @@ body {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .chart-container h3 {
@@ -699,6 +728,9 @@ body {
 
 .chart-container canvas {
     max-height: 300px;
+    max-width: 100%;
+    width: 100% !important;
+    height: auto !important;
 }
 
 .chart-container.full-width canvas {
@@ -713,6 +745,8 @@ body {
     margin-bottom: 1.5rem;
     flex-wrap: wrap;
     gap: 1rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .view-header h2 {
@@ -723,6 +757,8 @@ body {
     display: flex;
     gap: 1rem;
     align-items: center;
+    flex-wrap: wrap;
+    max-width: 100%;
 }
 
 .view-controls select {
@@ -862,6 +898,8 @@ body {
     box-shadow: var(--shadow);
     text-align: right;
     font-size: 1.125rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .available-savings {
@@ -872,6 +910,8 @@ body {
     color: white;
     text-align: right;
     font-size: 1.125rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 /* Savings Summary (Analytics page only) */
@@ -880,6 +920,8 @@ body {
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1.5rem;
     margin-bottom: 2rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .savings-summary .savings-card {
@@ -921,6 +963,8 @@ body {
     justify-content: center;
     z-index: 1000;
     padding: 1rem;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .modal-content {
@@ -931,6 +975,7 @@ body {
     max-width: 500px;
     max-height: 90vh;
     overflow-y: auto;
+    overflow-x: hidden;
     animation: slideIn 0.3s ease;
 }
 
@@ -1092,6 +1137,12 @@ body {
     .analytics-charts {
         grid-template-columns: 1fr;
     }
+
+    .chart-container canvas {
+        max-width: 100%;
+        width: 100% !important;
+        height: auto !important;
+    }
 }
 
 @media (max-width: 768px) {
@@ -1110,11 +1161,14 @@ body {
 
     .main-content {
         padding: 1rem;
+        overflow-x: hidden;
+        max-width: 100vw;
     }
 
     .view-header {
         flex-direction: column;
         align-items: flex-start;
+        width: 100%;
     }
 
     .view-controls {
@@ -1130,15 +1184,27 @@ body {
 
     .summary-cards {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .dashboard-charts,
     .analytics-charts {
         grid-template-columns: 1fr;
+        width: 100%;
+        overflow-x: hidden;
     }
 
     .chart-container {
         min-height: auto;
+        width: 100%;
+        overflow-x: hidden;
+        padding: 1rem;
+    }
+
+    .chart-container canvas {
+        max-width: 100%;
+        width: 100% !important;
+        height: auto !important;
     }
 
     .data-table th,
@@ -1154,6 +1220,7 @@ body {
 
     .savings-summary {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .savings-amount {
@@ -1166,6 +1233,28 @@ body {
 
     .form-actions button {
         width: 100%;
+    }
+
+    /* Ensure all form elements fit within viewport */
+    .form-group input,
+    .form-group select,
+    .form-group textarea {
+        width: 100%;
+        max-width: 100%;
+    }
+
+    /* Prevent modal from causing horizontal scroll */
+    .modal {
+        padding: 0.5rem;
+    }
+
+    .modal-content {
+        max-width: calc(100vw - 1rem);
+        margin: 0;
+    }
+
+    #entry-form {
+        padding: 1rem;
     }
 }
 
@@ -1182,12 +1271,18 @@ body {
         font-size: 1.5rem;
     }
 
+    .summary-card {
+        padding: 1rem;
+    }
+
     .view h2 {
         font-size: 1.5rem;
+        word-wrap: break-word;
     }
 
     .deepdive-stats {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .deepdive-stat p {
@@ -1196,6 +1291,7 @@ body {
 
     .projections-grid {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .projection-card p {
@@ -1204,11 +1300,14 @@ body {
 
     .report-summary-grid {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .modal-content {
         margin: 0.5rem;
         max-height: 95vh;
+        max-width: calc(100vw - 1rem);
+        padding: 0;
     }
 
     .warning-container h1 {
@@ -1221,6 +1320,23 @@ body {
 
     .mobile-action-btn {
         min-width: 100%;
+    }
+
+    /* Extra small screen optimizations */
+    .main-content {
+        padding: 0.75rem;
+    }
+
+    .chart-container {
+        padding: 0.75rem;
+    }
+
+    .category-trends-grid {
+        grid-template-columns: 1fr;
+    }
+
+    .gauge-wrapper {
+        max-width: 100%;
     }
 }
 
@@ -1372,6 +1488,8 @@ body {
     grid-template-columns: 1fr 2fr;
     gap: 1.5rem;
     margin-bottom: 2rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .gauge-container {
@@ -1380,6 +1498,8 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     text-align: center;
+    width: 100%;
+    overflow: hidden;
 }
 
 .gauge-container h3 {
@@ -1430,6 +1550,8 @@ body {
     padding: 1.5rem;
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
+    width: 100%;
+    overflow: hidden;
 }
 
 .top-expenses-container > h3,
@@ -1488,6 +1610,8 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     margin-bottom: 2rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .category-trends-section > h3 {
@@ -1501,6 +1625,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
     gap: 1rem;
+    width: 100%;
 }
 
 .category-trend-item {
@@ -1579,6 +1704,8 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     margin-bottom: 2rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .projections-section > h3 {
@@ -1591,6 +1718,7 @@ body {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
     gap: 1rem;
+    width: 100%;
 }
 
 .projection-card {
@@ -1625,6 +1753,8 @@ body {
     border-radius: var(--border-radius);
     box-shadow: var(--shadow);
     margin-top: 2rem;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .deepdive-header {
@@ -1693,6 +1823,8 @@ body {
     display: flex;
     justify-content: center;
     padding-top: 100px;
+    overflow-x: hidden;
+    overflow-y: auto;
 }
 
 .search-container {
@@ -1704,6 +1836,7 @@ body {
     max-height: 80vh;
     display: flex;
     flex-direction: column;
+    overflow-x: hidden;
 }
 
 .search-header {
@@ -1719,6 +1852,7 @@ body {
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius);
     font-size: 1rem;
+    max-width: 100%;
 }
 
 .search-header input:focus {
@@ -1729,6 +1863,7 @@ body {
 .search-results {
     flex: 1;
     overflow-y: auto;
+    overflow-x: hidden;
     padding: 1rem;
 }
 
@@ -1740,6 +1875,8 @@ body {
     border-bottom: 1px solid var(--border-color);
     cursor: pointer;
     transition: var(--transition);
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .search-result-item:hover {
@@ -1748,16 +1885,21 @@ body {
 
 .search-result-info {
     flex: 1;
+    min-width: 0;
+    overflow: hidden;
 }
 
 .search-result-desc {
     font-weight: 500;
     color: var(--text-primary);
+    word-wrap: break-word;
+    overflow-wrap: break-word;
 }
 
 .search-result-meta {
     font-size: 0.8rem;
     color: var(--text-secondary);
+    word-wrap: break-word;
 }
 
 .search-result-amount {
@@ -1767,10 +1909,15 @@ body {
 /* Extra Large Chart */
 .chart-container.extra-large {
     min-height: 500px;
+    width: 100%;
+    overflow-x: hidden;
 }
 
 .chart-container.extra-large canvas {
     max-height: 450px;
+    max-width: 100%;
+    width: 100% !important;
+    height: auto !important;
 }
 
 /* Form Textarea */
@@ -1860,6 +2007,7 @@ body {
 /* Report Modal */
 .modal-content.large {
     max-width: 800px;
+    overflow-x: hidden;
 }
 
 .report-controls {
@@ -1867,6 +2015,7 @@ body {
     gap: 1rem;
     padding: 1rem 1.5rem;
     border-bottom: 1px solid var(--border-color);
+    flex-wrap: wrap;
 }
 
 .report-controls select {
@@ -1874,12 +2023,15 @@ body {
     padding: 0.5rem 1rem;
     border: 2px solid var(--border-color);
     border-radius: var(--border-radius);
+    min-width: 150px;
 }
 
 .report-content {
     padding: 1.5rem;
     max-height: 60vh;
     overflow-y: auto;
+    overflow-x: hidden;
+    width: 100%;
 }
 
 .report-section {
@@ -1969,15 +2121,20 @@ body {
 @media (max-width: 768px) {
     .gauge-section {
         grid-template-columns: 1fr;
+        width: 100%;
+        overflow-x: hidden;
     }
 
     .category-trends-grid {
         grid-template-columns: 1fr;
+        width: 100%;
     }
 
     .category-trend-item {
         grid-template-columns: auto 1fr auto;
         gap: 0.75rem;
+        width: 100%;
+        overflow: hidden;
     }
 
     .sparkline-container {
@@ -1986,6 +2143,7 @@ body {
 
     .deepdive-stats {
         grid-template-columns: repeat(2, 1fr);
+        width: 100%;
     }
 
     .quick-add-btn {
@@ -2007,11 +2165,23 @@ body {
     .quick-add-menu {
         bottom: 80px;
         right: 15px;
+        max-width: calc(100vw - 30px);
     }
 
     .recurring-btn {
         font-size: 0.8rem;
         padding: 0.5rem 0.75rem;
+    }
+
+    /* Ensure search overlay doesn't cause horizontal scroll */
+    .search-container {
+        width: calc(100% - 2rem);
+        max-width: calc(100vw - 2rem);
+    }
+
+    .search-header input {
+        width: 100%;
+        max-width: 100%;
     }
 }
 
