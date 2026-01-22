@@ -318,6 +318,13 @@ function toggleMobileMenu() {
     mobileMenu.classList.toggle('hidden');
 }
 
+function toggleMoreOptions() {
+    const moreOptions = document.getElementById('more-options');
+    const toggle = document.querySelector('.more-options-toggle');
+    moreOptions.classList.toggle('hidden');
+    toggle.classList.toggle('expanded');
+}
+
 // ============================================
 // MONTH FILTER
 // ============================================
@@ -467,6 +474,11 @@ function openModal(type, editData = null) {
 
 function closeModal() {
     document.getElementById('modal').classList.add('hidden');
+    // Reset more options section
+    const moreOptions = document.getElementById('more-options');
+    const toggle = document.querySelector('.more-options-toggle');
+    if (moreOptions) moreOptions.classList.add('hidden');
+    if (toggle) toggle.classList.remove('expanded');
 }
 
 function openDeleteModal(type, id) {
