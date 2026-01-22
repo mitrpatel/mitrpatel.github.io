@@ -4,7 +4,7 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Security Warning - Access Denied</title>
-    <link rel="stylesheet" href="css/styles.css?v=2.4">
+    <link rel="stylesheet" href="css/styles.css?v=2.5">
     <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
 </head>
 <body>
@@ -629,43 +629,52 @@
                 <input type="hidden" id="entry-id">
                 <input type="hidden" id="entry-type">
 
-                <div class="form-group">
-                    <label for="entry-date">Date</label>
-                    <input type="date" id="entry-date" required>
-                </div>
+                <div class="form-body">
+                    <div class="form-group">
+                        <label for="entry-date">Date</label>
+                        <input type="date" id="entry-date" required>
+                    </div>
 
-                <div class="form-group">
-                    <label for="entry-description">Description</label>
-                    <input type="text" id="entry-description" required placeholder="Enter description">
-                </div>
+                    <div class="form-group">
+                        <label for="entry-description">Description</label>
+                        <input type="text" id="entry-description" required placeholder="Enter description">
+                    </div>
 
-                <div class="form-group category-group hidden">
-                    <label for="entry-category">Category</label>
-                    <select id="entry-category">
-                        <!-- Categories will be populated dynamically -->
-                    </select>
-                </div>
+                    <div class="form-group category-group hidden">
+                        <label for="entry-category">Category</label>
+                        <select id="entry-category">
+                            <!-- Categories will be populated dynamically -->
+                        </select>
+                    </div>
 
-                <div class="form-group">
-                    <label for="entry-amount">Amount ($)</label>
-                    <input type="number" id="entry-amount" step="0.01" min="0" required placeholder="0.00">
-                </div>
+                    <div class="form-group">
+                        <label for="entry-amount">Amount ($)</label>
+                        <input type="number" id="entry-amount" step="0.01" min="0" required placeholder="0.00">
+                    </div>
 
-                <div class="form-group">
-                    <label for="entry-notes">Notes (optional)</label>
-                    <textarea id="entry-notes" rows="2" placeholder="Add additional details..."></textarea>
-                </div>
+                    <!-- Collapsible Optional Fields -->
+                    <button type="button" class="more-options-toggle" onclick="toggleMoreOptions()">
+                        <span class="toggle-icon">+</span> More options
+                    </button>
 
-                <div class="form-group">
-                    <label for="entry-tags">Tags (optional)</label>
-                    <input type="text" id="entry-tags" placeholder="e.g., vacation, business, emergency (comma separated)">
-                </div>
+                    <div id="more-options" class="more-options-section hidden">
+                        <div class="form-group">
+                            <label for="entry-notes">Notes</label>
+                            <textarea id="entry-notes" rows="2" placeholder="Add additional details..."></textarea>
+                        </div>
 
-                <div class="form-group recurring-group">
-                    <label class="checkbox-label">
-                        <input type="checkbox" id="entry-recurring">
-                        <span>Recurring transaction (monthly)</span>
-                    </label>
+                        <div class="form-group">
+                            <label for="entry-tags">Tags</label>
+                            <input type="text" id="entry-tags" placeholder="e.g., vacation, business (comma separated)">
+                        </div>
+
+                        <div class="form-group recurring-group">
+                            <label class="checkbox-label">
+                                <input type="checkbox" id="entry-recurring">
+                                <span>Recurring transaction (monthly)</span>
+                            </label>
+                        </div>
+                    </div>
                 </div>
 
                 <div class="form-actions">
@@ -750,6 +759,6 @@
 
     <!-- Scripts -->
     <script type="module" src="js/firebase-config.js?v=2.1"></script>
-    <script type="module" src="js/app.js?v=2.2"></script>
+    <script type="module" src="js/app.js?v=2.3"></script>
 </body>
 </html>
