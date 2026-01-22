@@ -1241,6 +1241,18 @@ body {
     .form-group textarea {
         width: 100%;
         max-width: 100%;
+        box-sizing: border-box;
+    }
+
+    /* Fix date input overflow on mobile */
+    .form-group input[type="date"] {
+        -webkit-appearance: none;
+        -moz-appearance: none;
+        appearance: none;
+        width: 100% !important;
+        max-width: 100%;
+        min-width: 0;
+        box-sizing: border-box;
     }
 
     /* Prevent modal from causing horizontal scroll */
