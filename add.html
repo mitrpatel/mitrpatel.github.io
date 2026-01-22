@@ -1,0 +1,584 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Entry - MitCash</title>
+    <link rel="stylesheet" href="css/styles.css?v=2.6">
+    <style>
+        /* Add Entry Page Specific Styles */
+        .add-page {
+            min-height: 100vh;
+            background: var(--background-color);
+            padding-bottom: 2rem;
+        }
+
+        .add-page-header {
+            background: var(--card-background);
+            padding: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            box-shadow: var(--shadow);
+            position: sticky;
+            top: 0;
+            z-index: 100;
+        }
+
+        .back-btn {
+            background: transparent;
+            border: none;
+            font-size: 1.5rem;
+            cursor: pointer;
+            color: var(--text-primary);
+            padding: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .add-page-header h1 {
+            font-size: 1.25rem;
+            color: var(--text-primary);
+            margin: 0;
+        }
+
+        /* Type Selector */
+        .type-selector {
+            display: flex;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: var(--card-background);
+            margin-bottom: 1rem;
+        }
+
+        .type-btn {
+            flex: 1;
+            padding: 0.75rem 0.5rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            background: transparent;
+            font-size: 0.85rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+            color: var(--text-secondary);
+        }
+
+        .type-btn.active {
+            border-color: var(--primary-color);
+            background: var(--primary-color);
+            color: white;
+        }
+
+        .type-btn.expense-type.active {
+            border-color: var(--danger-color);
+            background: var(--danger-color);
+        }
+
+        .type-btn.income-type.active {
+            border-color: var(--success-color);
+            background: var(--success-color);
+        }
+
+        .type-btn.bill-type.active {
+            border-color: var(--warning-color);
+            background: var(--warning-color);
+        }
+
+        /* Form Container */
+        .add-form-container {
+            padding: 1rem;
+        }
+
+        .add-form-container .form-group {
+            margin-bottom: 1.25rem;
+        }
+
+        .add-form-container .form-group label {
+            display: block;
+            margin-bottom: 0.5rem;
+            font-weight: 500;
+            color: var(--text-primary);
+        }
+
+        .add-form-container .form-group input,
+        .add-form-container .form-group select,
+        .add-form-container .form-group textarea {
+            width: 100%;
+            padding: 0.875rem 1rem;
+            border: 2px solid var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            background: var(--card-background);
+            color: var(--text-primary);
+            box-sizing: border-box;
+        }
+
+        .add-form-container .form-group input:focus,
+        .add-form-container .form-group select:focus,
+        .add-form-container .form-group textarea:focus {
+            outline: none;
+            border-color: var(--primary-color);
+        }
+
+        /* Category group - hidden for income/bills */
+        .category-group.hidden {
+            display: none;
+        }
+
+        /* More Options Section */
+        .more-options-toggle {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+            width: 100%;
+            padding: 0.875rem 1rem;
+            background: var(--background-color);
+            border: 1px dashed var(--border-color);
+            border-radius: var(--border-radius);
+            font-size: 0.9rem;
+            color: var(--text-secondary);
+            cursor: pointer;
+            transition: var(--transition);
+            margin-bottom: 1.5rem;
+        }
+
+        .more-options-toggle:hover {
+            background: var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .more-options-toggle .toggle-icon {
+            font-weight: 700;
+            font-size: 1.1rem;
+            transition: transform 0.2s ease;
+        }
+
+        .more-options-toggle.expanded .toggle-icon {
+            transform: rotate(45deg);
+        }
+
+        .more-options-section {
+            padding-top: 1rem;
+            border-top: 1px solid var(--border-color);
+            margin-top: -1rem;
+            margin-bottom: 1.5rem;
+            animation: fadeIn 0.2s ease;
+        }
+
+        .more-options-section.hidden {
+            display: none;
+        }
+
+        /* Checkbox Label */
+        .checkbox-label {
+            display: flex;
+            align-items: center;
+            gap: 0.75rem;
+            cursor: pointer;
+            font-size: 0.95rem;
+        }
+
+        .checkbox-label input[type="checkbox"] {
+            width: 20px;
+            height: 20px;
+            cursor: pointer;
+        }
+
+        /* Form Actions */
+        .form-actions {
+            display: flex;
+            gap: 1rem;
+            margin-top: 1.5rem;
+        }
+
+        .form-actions button {
+            flex: 1;
+            padding: 1rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+
+        .form-actions .cancel-btn {
+            background: transparent;
+            border: 2px solid var(--border-color);
+            color: var(--text-primary);
+        }
+
+        .form-actions .submit-btn {
+            background: var(--primary-color);
+            border: none;
+            color: white;
+        }
+
+        .form-actions .submit-btn:hover {
+            background: var(--primary-hover);
+        }
+
+        /* Loading Overlay */
+        .loading {
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(255, 255, 255, 0.9);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            z-index: 2000;
+        }
+
+        .loading.hidden {
+            display: none;
+        }
+
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 4px solid var(--border-color);
+            border-top-color: var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+
+        /* Success Message */
+        .success-message {
+            position: fixed;
+            top: 50%;
+            left: 50%;
+            transform: translate(-50%, -50%);
+            background: var(--card-background);
+            padding: 2rem;
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow-lg);
+            text-align: center;
+            z-index: 2001;
+        }
+
+        .success-message.hidden {
+            display: none;
+        }
+
+        .success-message .checkmark {
+            font-size: 3rem;
+            margin-bottom: 1rem;
+        }
+
+        .success-message p {
+            font-size: 1.1rem;
+            color: var(--text-primary);
+            margin-bottom: 1rem;
+        }
+
+        .success-message button {
+            padding: 0.75rem 2rem;
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            cursor: pointer;
+        }
+
+        /* Dark mode support */
+        .dark-mode .add-page {
+            background: var(--background-color);
+        }
+
+        .dark-mode .loading {
+            background: rgba(26, 26, 46, 0.9);
+        }
+    </style>
+</head>
+<body>
+    <div id="add-page" class="add-page">
+        <!-- Header -->
+        <div class="add-page-header">
+            <button class="back-btn" onclick="goBack()">
+                <span>&larr;</span>
+            </button>
+            <h1 id="page-title">Add Entry</h1>
+        </div>
+
+        <!-- Type Selector -->
+        <div class="type-selector">
+            <button class="type-btn expense-type active" onclick="selectType('expense')">Expense</button>
+            <button class="type-btn income-type" onclick="selectType('income')">Income</button>
+            <button class="type-btn bill-type" onclick="selectType('bill')">Bill</button>
+        </div>
+
+        <!-- Form -->
+        <div class="add-form-container">
+            <form id="add-form" onsubmit="handleSubmit(event)">
+                <div class="form-group">
+                    <label for="entry-date">Date</label>
+                    <input type="date" id="entry-date" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry-description">Description</label>
+                    <input type="text" id="entry-description" required placeholder="Enter description">
+                </div>
+
+                <div class="form-group category-group" id="category-group">
+                    <label for="entry-category">Category</label>
+                    <select id="entry-category">
+                        <option value="Rent">Rent</option>
+                        <option value="Utilities">Utilities</option>
+                        <option value="Groceries">Groceries</option>
+                        <option value="Transportation">Transportation</option>
+                        <option value="Investment">Investment</option>
+                        <option value="Eating Out">Eating Out</option>
+                        <option value="Donations">Donations</option>
+                        <option value="Car Payment">Car Payment</option>
+                        <option value="Other">Other</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="entry-amount">Amount ($)</label>
+                    <input type="number" id="entry-amount" step="0.01" min="0" required placeholder="0.00">
+                </div>
+
+                <!-- More Options Toggle -->
+                <button type="button" class="more-options-toggle" onclick="toggleMoreOptions()">
+                    <span class="toggle-icon">+</span> More options
+                </button>
+
+                <!-- More Options Section -->
+                <div id="more-options" class="more-options-section hidden">
+                    <div class="form-group">
+                        <label for="entry-notes">Notes</label>
+                        <textarea id="entry-notes" rows="2" placeholder="Add additional details..."></textarea>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="entry-tags">Tags</label>
+                        <input type="text" id="entry-tags" placeholder="e.g., vacation, business (comma separated)">
+                    </div>
+
+                    <div class="form-group">
+                        <label class="checkbox-label">
+                            <input type="checkbox" id="entry-recurring">
+                            <span>Recurring transaction (monthly)</span>
+                        </label>
+                    </div>
+                </div>
+
+                <div class="form-actions">
+                    <button type="button" class="cancel-btn" onclick="goBack()">Cancel</button>
+                    <button type="submit" class="submit-btn">Save</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Loading Overlay -->
+    <div id="loading" class="loading hidden">
+        <div class="spinner"></div>
+    </div>
+
+    <!-- Success Message -->
+    <div id="success-message" class="success-message hidden">
+        <div class="checkmark">&#10003;</div>
+        <p id="success-text">Entry saved successfully!</p>
+        <button onclick="handleSuccessAction()">OK</button>
+    </div>
+
+    <!-- Scripts -->
+    <script type="module" src="js/firebase-config.js?v=2.1"></script>
+    <script type="module">
+        // Wait for Firebase to be ready
+        let currentType = 'expense';
+        let customCategories = {};
+
+        // Check URL params for type
+        function getUrlParams() {
+            const params = new URLSearchParams(window.location.search);
+            return {
+                type: params.get('type') || 'expense'
+            };
+        }
+
+        // Initialize
+        async function init() {
+            // Apply dark mode if saved
+            const isDarkMode = localStorage.getItem('darkMode') === 'true';
+            if (isDarkMode) {
+                document.body.classList.add('dark-mode');
+            }
+
+            // Load custom categories
+            customCategories = JSON.parse(localStorage.getItem('customCategories')) || {};
+            updateCategoryDropdown();
+
+            // Set initial type from URL
+            const params = getUrlParams();
+            selectType(params.type);
+
+            // Set default date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('entry-date').value = today;
+
+            // Wait for Firebase and check auth
+            await waitForFirebase();
+            const authState = await window.FirebaseService.checkAuthState();
+
+            if (!authState.authenticated) {
+                // Redirect to main page if not authenticated
+                window.location.href = 'index.html';
+                return;
+            }
+
+            // Update page title
+            document.title = 'Add Entry - MitCash';
+        }
+
+        async function waitForFirebase() {
+            return new Promise((resolve) => {
+                const check = () => {
+                    if (window.FirebaseService) {
+                        resolve();
+                    } else {
+                        setTimeout(check, 100);
+                    }
+                };
+                check();
+            });
+        }
+
+        function updateCategoryDropdown() {
+            const defaultCategories = [
+                'Rent', 'Utilities', 'Groceries', 'Transportation',
+                'Investment', 'Eating Out', 'Donations', 'Car Payment', 'Other'
+            ];
+            const allCategories = [...new Set([...defaultCategories, ...Object.keys(customCategories)])];
+
+            const select = document.getElementById('entry-category');
+            select.innerHTML = allCategories.map(cat =>
+                `<option value="${cat}">${cat}</option>`
+            ).join('');
+        }
+
+        window.selectType = function(type) {
+            currentType = type;
+
+            // Update button states
+            document.querySelectorAll('.type-btn').forEach(btn => btn.classList.remove('active'));
+            document.querySelector(`.${type}-type`).classList.add('active');
+
+            // Update page title
+            const titles = {
+                expense: 'Add Expense',
+                income: 'Add Income',
+                bill: 'Add Bill'
+            };
+            document.getElementById('page-title').textContent = titles[type];
+
+            // Show/hide category
+            const categoryGroup = document.getElementById('category-group');
+            if (type === 'expense') {
+                categoryGroup.classList.remove('hidden');
+            } else {
+                categoryGroup.classList.add('hidden');
+            }
+
+            // Update description placeholder
+            const placeholders = {
+                expense: 'e.g., Groceries at Whole Foods',
+                income: 'e.g., Paycheck, Freelance work',
+                bill: 'e.g., Chase Credit Card'
+            };
+            document.getElementById('entry-description').placeholder = placeholders[type];
+        }
+
+        window.toggleMoreOptions = function() {
+            const moreOptions = document.getElementById('more-options');
+            const toggle = document.querySelector('.more-options-toggle');
+            moreOptions.classList.toggle('hidden');
+            toggle.classList.toggle('expanded');
+        }
+
+        window.goBack = function() {
+            // Go back to main app
+            window.location.href = 'index.html';
+        }
+
+        window.handleSubmit = async function(event) {
+            event.preventDefault();
+
+            document.getElementById('loading').classList.remove('hidden');
+
+            const date = document.getElementById('entry-date').value;
+            const description = document.getElementById('entry-description').value;
+            const amount = parseFloat(document.getElementById('entry-amount').value);
+            const notes = document.getElementById('entry-notes').value.trim();
+            const tagsInput = document.getElementById('entry-tags').value.trim();
+            const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+            const recurring = document.getElementById('entry-recurring').checked;
+
+            let data = { date, amount, notes, tags, recurring };
+
+            if (currentType === 'income') {
+                data.source = description;
+            } else if (currentType === 'expense') {
+                data.description = description;
+                data.category = document.getElementById('entry-category').value;
+            } else if (currentType === 'bill') {
+                data.description = description;
+            }
+
+            const collectionName = currentType === 'income' ? 'income' :
+                                  currentType === 'expense' ? 'expenses' : 'bills';
+
+            try {
+                const result = await window.FirebaseService.addDocument(collectionName, data);
+
+                document.getElementById('loading').classList.add('hidden');
+
+                if (result.success) {
+                    // Show success and redirect
+                    const typeLabel = currentType.charAt(0).toUpperCase() + currentType.slice(1);
+                    document.getElementById('success-text').textContent = `${typeLabel} saved successfully!`;
+                    document.getElementById('success-message').classList.remove('hidden');
+                } else {
+                    alert('Failed to save entry. Please try again.');
+                }
+            } catch (error) {
+                document.getElementById('loading').classList.add('hidden');
+                alert('Error saving entry: ' + error.message);
+            }
+        }
+
+        window.handleSuccessAction = function() {
+            // Reset form for another entry or go back
+            document.getElementById('success-message').classList.add('hidden');
+            document.getElementById('add-form').reset();
+
+            // Reset date to today
+            const today = new Date().toISOString().split('T')[0];
+            document.getElementById('entry-date').value = today;
+
+            // Close more options
+            document.getElementById('more-options').classList.add('hidden');
+            document.querySelector('.more-options-toggle').classList.remove('expanded');
+
+            // Go back to main page
+            window.location.href = 'index.html';
+        }
+
+        // Initialize on DOM load
+        document.addEventListener('DOMContentLoaded', init);
+    </script>
+</body>
+</html>
