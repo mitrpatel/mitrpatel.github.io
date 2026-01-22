@@ -423,10 +423,24 @@ function updateDashboardMonthlySummary() {
 }
 
 // ============================================
+// MOBILE DETECTION
+// ============================================
+
+function isMobile() {
+    return window.innerWidth <= 768;
+}
+
+// ============================================
 // MODAL FUNCTIONS
 // ============================================
 
 function openModal(type, editData = null) {
+    // On mobile, redirect to add.html page (only for new entries, not edits)
+    if (isMobile() && !editData) {
+        window.location.href = `add.html?type=${type}`;
+        return;
+    }
+
     const modal = document.getElementById('modal');
     const title = document.getElementById('modal-title');
     const categoryGroup = document.querySelector('.category-group');
