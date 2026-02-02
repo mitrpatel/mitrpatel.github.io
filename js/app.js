@@ -33,6 +33,10 @@ let annualBillData = [];
 
 let deleteTarget = null;
 
+// Store edit data to avoid JSON.stringify in onclick handlers
+let editDataStore = new Map();
+let editDataCounter = 0;
+
 // Chart instances
 let dashboardCategoryMonthChart = null;
 let spendingGaugeChart = null;
@@ -258,22 +262,155 @@ async function loadAnnualData() {
     }
 }
 
+// ============================================
+// AUTOMATIC RECURRING TRANSACTIONS
+// ============================================
+
+// Automatically create recurring transactions when viewing a month
+async function autoCreateRecurringTransactions(type, currentYear, currentMonth) {
+    try {
+        // Calculate previous month
+        let prevMonth = currentMonth - 1;
+        let prevYear = currentYear;
+        if (prevMonth < 1) {
+            prevMonth = 12;
+            prevYear--;
+        }
+
+        const collectionName = type === 'income' ? 'income' :
+                              type === 'expense' ? 'expenses' : 'bills';
+
+        // Get recurring transactions from previous month
+        const prevResult = await window.FirebaseService.getDocumentsByMonth(collectionName, prevYear, prevMonth);
+        const recurringItems = prevResult.success ? prevResult.data.filter(item => item.recurring) : [];
+
+        if (recurringItems.length === 0) {
+            return; // No recurring transactions to process
+        }
+
+        // Get current month transactions
+        const currentResult = await window.FirebaseService.getDocumentsByMonth(collectionName, currentYear, currentMonth);
+        const currentItems = currentResult.success ? currentResult.data : [];
+
+        // Get today's date
+        const today = new Date();
+        const todayDate = today.getDate();
+        const todayMonth = today.getMonth() + 1;
+        const todayYear = today.getFullYear();
+
+        // Calculate the target date (year-month of the view we're looking at)
+        const viewDate = new Date(currentYear, currentMonth - 1, 1);
+        const todayForComparison = new Date(todayYear, todayMonth - 1, todayDate);
+
+        // Only auto-create if the view month is not in the future
+        if (viewDate > todayForComparison) {
+            return; // Viewing a future month, don't auto-create yet
+        }
+
+        // Process each recurring transaction
+        for (const item of recurringItems) {
+            const oldDate = new Date(item.date + 'T00:00:00');
+            let transactionDay = oldDate.getDate();
+
+            // Handle edge cases for months with fewer days
+            const lastDayOfMonth = new Date(currentYear, currentMonth, 0).getDate();
+            if (transactionDay > lastDayOfMonth) {
+                transactionDay = lastDayOfMonth;
+            }
+
+            const newDate = `${currentYear}-${String(currentMonth).padStart(2, '0')}-${String(transactionDay).padStart(2, '0')}`;
+            const transactionDate = new Date(currentYear, currentMonth - 1, transactionDay);
+
+            // Only create if:
+            // 1. We're viewing the current month and today >= transaction day, OR
+            // 2. We're viewing a past month (transaction is overdue)
+            if (currentYear === todayYear && currentMonth === todayMonth) {
+                // Current month - check if today is on or after the transaction day
+                if (todayDate < transactionDay) {
+                    continue; // Not time yet
+                }
+            }
+            // If viewing a past month, always create (it's overdue)
+
+            // Check if this transaction already exists
+            const desc = item.source || item.description;
+            const alreadyExists = currentItems.some(existing => {
+                const existingDesc = existing.source || existing.description;
+                return existingDesc === desc && existing.recurring && existing.date === newDate;
+            });
+
+            if (alreadyExists) {
+                continue; // Transaction already created
+            }
+
+            // Create new transaction
+            const newItemData = {
+                date: newDate,
+                amount: item.amount,
+                notes: item.notes || '',
+                tags: item.tags || [],
+                recurring: true
+            };
+
+            if (type === 'income') {
+                newItemData.source = item.source;
+            } else if (type === 'expense') {
+                newItemData.description = item.description;
+                newItemData.category = item.category;
+            } else if (type === 'bill') {
+                newItemData.description = item.description;
+            }
+
+            // Add to database
+            await window.FirebaseService.addDocument(collectionName, newItemData);
+        }
+
+        // Reload data after auto-creating
+        if (recurringItems.length > 0) {
+            const reloadResult = await window.FirebaseService.getDocumentsByMonth(collectionName, currentYear, currentMonth);
+            if (type === 'income') {
+                incomeData = reloadResult.success ? reloadResult.data : [];
+            } else if (type === 'expense') {
+                expenseData = reloadResult.success ? reloadResult.data : [];
+            } else if (type === 'bill') {
+                billData = reloadResult.success ? reloadResult.data : [];
+            }
+        }
+    } catch (error) {
+        console.error('Error auto-creating recurring transactions:', error);
+        // Silently fail - don't disrupt normal operation
+    }
+}
+
+// ============================================
+// DATA LOADING
+// ============================================
+
 // Load income data for selected month
 async function loadIncomeData() {
     const result = await window.FirebaseService.getDocumentsByMonth('income', incomeYear, incomeMonth);
     incomeData = result.success ? result.data : [];
+
+    // Check and auto-create recurring transactions
+    await autoCreateRecurringTransactions('income', incomeYear, incomeMonth);
 }
 
 // Load expense data for selected month
 async function loadExpenseData() {
     const result = await window.FirebaseService.getDocumentsByMonth('expenses', expensesYear, expensesMonth);
     expenseData = result.success ? result.data : [];
+
+    // Check and auto-create recurring transactions
+    await autoCreateRecurringTransactions('expense', expensesYear, expensesMonth);
 }
 
 // Load bill data for selected month
 async function loadBillData() {
     const result = await window.FirebaseService.getDocumentsByMonth('bills', billsYear, billsMonth);
     billData = result.success ? result.data : [];
+
+    // Check and auto-create recurring transactions
+    await autoCreateRecurringTransactions('bill', billsYear, billsMonth);
 }
 
 // Load income for bills view (same month as bills)
@@ -321,8 +458,19 @@ function toggleMobileMenu() {
 function toggleMoreOptions() {
     const moreOptions = document.getElementById('more-options');
     const toggle = document.querySelector('.more-options-toggle');
-    moreOptions.classList.toggle('hidden');
-    toggle.classList.toggle('expanded');
+    const toggleIcon = toggle.querySelector('.toggle-icon');
+
+    if (moreOptions && toggle) {
+        moreOptions.classList.toggle('hidden');
+        toggle.classList.toggle('expanded');
+
+        // Update icon text
+        if (moreOptions.classList.contains('hidden')) {
+            if (toggleIcon) toggleIcon.textContent = '+';
+        } else {
+            if (toggleIcon) toggleIcon.textContent = '−';
+        }
+    }
 }
 
 // ============================================
@@ -434,7 +582,27 @@ function isMobile() {
 // MODAL FUNCTIONS
 // ============================================
 
-function openModal(type, editData = null) {
+// Helper function to store edit data and get ID
+function storeEditData(data) {
+    const id = `edit-${editDataCounter++}`;
+    editDataStore.set(id, data);
+    return id;
+}
+
+// Helper function to retrieve and remove edit data
+function retrieveEditData(id) {
+    const data = editDataStore.get(id);
+    editDataStore.delete(id);
+    return data;
+}
+
+function openModal(type, editDataOrId = null) {
+    // If editDataOrId is a string, retrieve the actual data
+    let editData = editDataOrId;
+    if (typeof editDataOrId === 'string') {
+        editData = retrieveEditData(editDataOrId);
+    }
+
     // On mobile, redirect to add.html page (only for new entries, not edits)
     if (isMobile() && !editData) {
         window.location.href = `add.html?type=${type}`;
@@ -729,17 +897,19 @@ function updateIncomeTable() {
             </tr>
         `;
     } else {
-        tbody.innerHTML = incomeData.map(item => `
+        tbody.innerHTML = incomeData.map(item => {
+            const editId = storeEditData(item);
+            return `
             <tr>
                 <td>${formatDate(item.date)}</td>
-                <td>${escapeHtml(item.source)}${item.recurring ? '<span class="recurring-badge">Recurring</span>' : ''}</td>
+                <td>${escapeHtml(item.source)}${item.recurring ? '<span class="recurring-badge">Recurring</span>' : ''}${generateNotesIndicator(item.notes)}</td>
                 <td>${formatCurrency(item.amount)}</td>
                 <td>
-                    <button class="action-btn edit-btn" onclick="openModal('income', ${JSON.stringify(item).replace(/"/g, '&quot;')})">Edit</button>
+                    <button class="action-btn edit-btn" onclick="openModal('income', '${editId}')">Edit</button>
                     <button class="action-btn delete-btn" onclick="openDeleteModal('income', '${item.id}')">Delete</button>
                 </td>
             </tr>
-        `).join('');
+        `}).join('');
     }
 
     document.getElementById('income-view-total').textContent = formatCurrency(total);
@@ -771,18 +941,20 @@ function filterExpensesByCategory() {
             </tr>
         `;
     } else {
-        tbody.innerHTML = filteredData.map(item => `
+        tbody.innerHTML = filteredData.map(item => {
+            const editId = storeEditData(item);
+            return `
             <tr>
                 <td>${formatDate(item.date)}</td>
-                <td>${escapeHtml(item.description)}${item.recurring ? '<span class="recurring-badge">Recurring</span>' : ''}</td>
+                <td>${escapeHtml(item.description)}${item.recurring ? '<span class="recurring-badge">Recurring</span>' : ''}${generateNotesIndicator(item.notes)}</td>
                 <td><span class="category-badge" style="background-color: ${categoryColors[item.category] || '#6b7280'}20; color: ${categoryColors[item.category] || '#6b7280'}">${item.category}</span></td>
                 <td>${formatCurrency(item.amount)}</td>
                 <td>
-                    <button class="action-btn edit-btn" onclick="openModal('expense', ${JSON.stringify(item).replace(/"/g, '&quot;')})">Edit</button>
+                    <button class="action-btn edit-btn" onclick="openModal('expense', '${editId}')">Edit</button>
                     <button class="action-btn delete-btn" onclick="openDeleteModal('expense', '${item.id}')">Delete</button>
                 </td>
             </tr>
-        `).join('');
+        `}).join('');
     }
 
     document.getElementById('expenses-view-total').textContent = formatCurrency(total);
@@ -812,17 +984,19 @@ async function updateBillsTable() {
             </tr>
         `;
     } else {
-        tbody.innerHTML = billData.map(item => `
+        tbody.innerHTML = billData.map(item => {
+            const editId = storeEditData(item);
+            return `
             <tr>
                 <td>${formatDate(item.date)}</td>
-                <td>${escapeHtml(item.description)}${item.recurring ? '<span class="recurring-badge">Recurring</span>' : ''}</td>
+                <td>${escapeHtml(item.description)}${item.recurring ? '<span class="recurring-badge">Recurring</span>' : ''}${generateNotesIndicator(item.notes)}</td>
                 <td>${formatCurrency(item.amount)}</td>
                 <td>
-                    <button class="action-btn edit-btn" onclick="openModal('bill', ${JSON.stringify(item).replace(/"/g, '&quot;')})">Edit</button>
+                    <button class="action-btn edit-btn" onclick="openModal('bill', '${editId}')">Edit</button>
                     <button class="action-btn delete-btn" onclick="openDeleteModal('bill', '${item.id}')">Delete</button>
                 </td>
             </tr>
-        `).join('');
+        `}).join('');
     }
 
     document.getElementById('bills-view-total').textContent = formatCurrency(totalBills);
@@ -1750,6 +1924,55 @@ function updateBillHistory() {
 // UTILITY FUNCTIONS
 // ============================================
 
+function generateNotesIndicator(notes) {
+    if (!notes || notes.trim() === '') {
+        return '';
+    }
+    const escapedNotes = escapeHtml(notes);
+    const isMobile = window.innerWidth <= 768;
+    const clickHandler = isMobile ? 'onclick="toggleNotesTooltip(this)"' : '';
+    const clickableClass = isMobile ? ' clickable' : '';
+
+    return `<span class="notes-indicator${clickableClass}" ${clickHandler}>
+        📝
+        <span class="notes-tooltip">${escapedNotes}</span>
+    </span>`;
+}
+
+// Store close handler reference to prevent memory leaks
+let activeNotesTooltipHandler = null;
+
+function toggleNotesTooltip(element) {
+    // Close any other open tooltips first
+    document.querySelectorAll('.notes-indicator.active').forEach(el => {
+        if (el !== element) {
+            el.classList.remove('active');
+        }
+    });
+
+    // Remove existing event listener if any
+    if (activeNotesTooltipHandler) {
+        document.removeEventListener('click', activeNotesTooltipHandler);
+        activeNotesTooltipHandler = null;
+    }
+
+    element.classList.toggle('active');
+
+    // Close when clicking outside
+    if (element.classList.contains('active')) {
+        setTimeout(() => {
+            activeNotesTooltipHandler = (e) => {
+                if (!element.contains(e.target)) {
+                    element.classList.remove('active');
+                    document.removeEventListener('click', activeNotesTooltipHandler);
+                    activeNotesTooltipHandler = null;
+                }
+            };
+            document.addEventListener('click', activeNotesTooltipHandler);
+        }, 10);
+    }
+}
+
 function formatCurrency(amount) {
     return new Intl.NumberFormat('en-US', {
         style: 'currency',
@@ -1795,6 +2018,7 @@ window.openDeleteModal = openDeleteModal;
 window.closeDeleteModal = closeDeleteModal;
 window.confirmDelete = confirmDelete;
 window.filterExpensesByCategory = filterExpensesByCategory;
+window.toggleNotesTooltip = toggleNotesTooltip;
 
 // New feature functions
 window.toggleDarkMode = toggleDarkMode;
@@ -1815,3 +2039,4 @@ window.printReport = printReport;
 window.openBillHistoryModal = openBillHistoryModal;
 window.closeBillHistoryModal = closeBillHistoryModal;
 window.populateRecurring = populateRecurring;
+window.toggleMoreOptions = toggleMoreOptions;

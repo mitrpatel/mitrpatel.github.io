@@ -505,8 +505,17 @@
         window.toggleMoreOptions = function() {
             const moreOptions = document.getElementById('more-options');
             const toggle = document.querySelector('.more-options-toggle');
+            const toggleIcon = toggle.querySelector('.toggle-icon');
+
             moreOptions.classList.toggle('hidden');
             toggle.classList.toggle('expanded');
+
+            // Update icon text
+            if (moreOptions.classList.contains('hidden')) {
+                if (toggleIcon) toggleIcon.textContent = '+';
+            } else {
+                if (toggleIcon) toggleIcon.textContent = '−';
+            }
         }
 
         window.goBack = function() {
