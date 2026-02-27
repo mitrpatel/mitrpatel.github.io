@@ -37,6 +37,11 @@ let deleteTarget = null;
 let editDataStore = new Map();
 let editDataCounter = 0;
 
+// Helper: read a CSS variable's current computed value (for dark mode-aware charts)
+function getCSSVar(name) {
+    return getComputedStyle(document.documentElement).getPropertyValue(name).trim();
+}
+
 // Chart instances
 let dashboardCategoryMonthChart = null;
 let spendingGaugeChart = null;
@@ -567,7 +572,7 @@ function updateDashboardMonthlySummary() {
 
     // Color savings based on positive/negative
     const savingsElement = document.getElementById('monthly-net-savings');
-    savingsElement.style.color = netSavings >= 0 ? '#10b981' : '#ef4444';
+    savingsElement.style.color = netSavings >= 0 ? getCSSVar('--success-color') : getCSSVar('--danger-color');
 }
 
 // ============================================
@@ -788,7 +793,7 @@ async function updateDashboard() {
 
     // Color savings based on positive/negative
     const savingsElement = document.getElementById('net-savings');
-    savingsElement.style.color = netSavings >= 0 ? '#10b981' : '#ef4444';
+    savingsElement.style.color = netSavings >= 0 ? getCSSVar('--success-color') : getCSSVar('--danger-color');
 
     // Load and update monthly summary
     await loadDashboardMonthlyData();
@@ -887,6 +892,9 @@ function updateDashboardCharts() {
 function updateIncomeTable() {
     const tbody = document.getElementById('income-table-body');
     const total = incomeData.reduce((sum, item) => sum + item.amount, 0);
+
+    // Clear stale edit data entries from previous render
+    editDataStore.clear();
 
     if (incomeData.length === 0) {
         tbody.innerHTML = `
@@ -1001,7 +1009,7 @@ async function updateBillsTable() {
 
     document.getElementById('bills-view-total').textContent = formatCurrency(totalBills);
     document.getElementById('available-savings').textContent = formatCurrency(availableSavings);
-    document.getElementById('available-savings').parentElement.style.color = availableSavings >= 0 ? '' : '#ef4444';
+    document.getElementById('available-savings').parentElement.style.color = availableSavings >= 0 ? '' : getCSSVar('--danger-color');
 }
 
 // ============================================
@@ -1018,10 +1026,10 @@ async function updateAnalytics() {
     const availableSavings = totalIncome - totalBills;
 
     document.getElementById('analytics-net-savings').textContent = formatCurrency(netSavings);
-    document.getElementById('analytics-net-savings').style.color = netSavings >= 0 ? '#10b981' : '#ef4444';
+    document.getElementById('analytics-net-savings').style.color = netSavings >= 0 ? getCSSVar('--success-color') : getCSSVar('--danger-color');
 
     document.getElementById('analytics-available-savings').textContent = formatCurrency(availableSavings);
-    document.getElementById('analytics-available-savings').style.color = availableSavings >= 0 ? '#10b981' : '#ef4444';
+    document.getElementById('analytics-available-savings').style.color = availableSavings >= 0 ? getCSSVar('--success-color') : getCSSVar('--danger-color');
 
     // Update financial projections
     updateProjections();
@@ -1057,7 +1065,7 @@ async function updateAnalyticsCharts() {
                 data: pieData,
                 backgroundColor: pieColors,
                 borderWidth: 2,
-                borderColor: '#ffffff'
+                borderColor: getCSSVar('--card-background') || '#ffffff'
             }]
         },
         options: {
@@ -1405,7 +1413,7 @@ function updateSpendingGauge() {
         data: {
             datasets: [{
                 data: [percentage, 100 - percentage],
-                backgroundColor: [gaugeColor, '#e5e7eb'],
+                backgroundColor: [gaugeColor, getCSSVar('--border-color') || '#e5e7eb'],
                 borderWidth: 0
             }]
         },
@@ -1596,9 +1604,9 @@ function updateProjections() {
     document.getElementById('projected-income').textContent = formatCurrency(projectedIncome);
     document.getElementById('projected-expenses').textContent = formatCurrency(projectedExpenses);
     document.getElementById('projected-savings').textContent = formatCurrency(projectedSavings);
-    document.getElementById('projected-savings').style.color = projectedSavings >= 0 ? '#10b981' : '#ef4444';
+    document.getElementById('projected-savings').style.color = projectedSavings >= 0 ? getCSSVar('--success-color') : getCSSVar('--danger-color');
     document.getElementById('projected-savings-rate').textContent = savingsRate.toFixed(1) + '%';
-    document.getElementById('projected-savings-rate').style.color = savingsRate >= 20 ? '#10b981' : savingsRate >= 10 ? '#f59e0b' : '#ef4444';
+    document.getElementById('projected-savings-rate').style.color = savingsRate >= 20 ? getCSSVar('--success-color') : savingsRate >= 10 ? getCSSVar('--warning-color') : getCSSVar('--danger-color');
 }
 
 // Category Deep-Dive
@@ -2002,6 +2010,68 @@ function hideLoading() {
     document.getElementById('loading').classList.add('hidden');
 }
 
+// Page-based add entry form (in-app alternative to modal, used on some devices)
+function goBackFromAddEntry() {
+    showView(currentView === 'add-entry' ? 'dashboard' : currentView);
+}
+
+async function handlePageFormSubmit(event) {
+    event.preventDefault();
+    showLoading();
+
+    const type = document.getElementById('page-entry-type').value;
+    const id = document.getElementById('page-entry-id').value;
+    const date = document.getElementById('page-entry-date').value;
+    const description = document.getElementById('page-entry-description').value;
+    const amount = parseFloat(document.getElementById('page-entry-amount').value);
+    const notes = (document.getElementById('page-entry-notes').value || '').trim();
+    const tagsInput = (document.getElementById('page-entry-tags').value || '').trim();
+    const tags = tagsInput ? tagsInput.split(',').map(t => t.trim()).filter(t => t) : [];
+    const recurring = document.getElementById('page-entry-recurring').checked;
+
+    let data = { date, amount, notes, tags, recurring };
+
+    if (type === 'income') {
+        data.source = description;
+    } else if (type === 'expense') {
+        data.description = description;
+        data.category = document.getElementById('page-entry-category').value;
+    } else if (type === 'bill') {
+        data.description = description;
+    }
+
+    const collectionName = type === 'income' ? 'income' :
+                          type === 'expense' ? 'expenses' : 'bills';
+
+    let result;
+    if (id) {
+        result = await window.FirebaseService.updateDocument(collectionName, id, data);
+    } else {
+        result = await window.FirebaseService.addDocument(collectionName, data);
+    }
+
+    if (result.success) {
+        await loadAnnualData();
+        if (type === 'income') {
+            await loadIncomeData();
+            updateIncomeTable();
+        } else if (type === 'expense') {
+            await loadExpenseData();
+            updateExpenseTable();
+        } else {
+            await loadBillData();
+            updateBillsTable();
+        }
+        await updateDashboard();
+        updateAnalytics();
+        goBackFromAddEntry();
+    } else {
+        alert('Failed to save entry. Please try again.');
+    }
+
+    hideLoading();
+}
+
 // Make functions globally available
 window.handleLogin = handleLogin;
 window.handleGoogleLogin = handleGoogleLogin;
@@ -2040,3 +2110,5 @@ window.openBillHistoryModal = openBillHistoryModal;
 window.closeBillHistoryModal = closeBillHistoryModal;
 window.populateRecurring = populateRecurring;
 window.toggleMoreOptions = toggleMoreOptions;
+window.goBackFromAddEntry = goBackFromAddEntry;
+window.handlePageFormSubmit = handlePageFormSubmit;

@@ -1,0 +1,213 @@
+/* ============================================
+   CARDS — Summary, Charts, Monthly Summary,
+   Savings Summary, View Total
+   ============================================ */
+
+/* --- SUMMARY CARDS --- */
+
+.summary-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+}
+
+.summary-card {
+    background: hsl(var(--card));
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    border-left: 3px solid hsl(var(--primary));
+}
+
+.summary-card h3 {
+    font-size: 0.75rem;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 0.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    font-weight: 500;
+}
+
+.summary-card p {
+    font-size: 1.625rem;
+    font-weight: 700;
+    color: hsl(var(--foreground));
+    letter-spacing: -0.02em;
+}
+
+.income-card  { border-left-color: hsl(var(--success)); }
+.income-card p  { color: hsl(var(--success)); }
+
+.expense-card { border-left-color: hsl(var(--destructive)); }
+.expense-card p { color: hsl(var(--destructive)); }
+
+.savings-card { border-left-color: hsl(var(--info)); }
+.savings-card p { color: hsl(var(--info)); }
+
+.bills-card   { border-left-color: hsl(var(--warning)); }
+.bills-card p   { color: hsl(var(--warning)); }
+
+/* --- MONTHLY SUMMARY SECTION --- */
+
+.monthly-summary-section {
+    margin-bottom: 1.5rem;
+    padding: 1.25rem 1.5rem;
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    width: 100%;
+    overflow-x: clip;
+}
+
+.monthly-summary-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 1.25rem;
+    flex-wrap: wrap;
+    gap: 0.75rem;
+}
+
+.monthly-summary-header h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    margin: 0;
+}
+
+.monthly-summary-header select {
+    padding: 0.375rem 0.75rem;
+    border: 1px solid hsl(var(--input));
+    border-radius: var(--radius);
+    font-size: 0.8125rem;
+    background-color: hsl(var(--background));
+    color: hsl(var(--foreground));
+    cursor: pointer;
+    min-width: 150px;
+    font-family: inherit;
+}
+
+.monthly-summary-section .summary-cards {
+    margin-bottom: 0;
+}
+
+/* --- CHART CONTAINERS --- */
+
+.dashboard-charts,
+.analytics-charts {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+    gap: 1rem;
+    width: 100%;
+    overflow-x: clip;
+}
+
+.chart-container {
+    background: hsl(var(--card));
+    padding: 1.25rem 1.5rem;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    width: 100%;
+    overflow-x: clip;
+}
+
+.chart-container h3 {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    margin-bottom: 1rem;
+}
+
+.chart-container.large    { min-height: 400px; }
+.chart-container.full-width {
+    grid-column: 1 / -1;
+    min-height: 350px;
+}
+.chart-container.extra-large {
+    min-height: 500px;
+    width: 100%;
+    overflow-x: clip;
+}
+
+.chart-container canvas {
+    max-height: 300px;
+    max-width: 100%;
+    width: 100% !important;
+    height: auto !important;
+}
+
+.chart-container.full-width canvas    { max-height: 400px; }
+.chart-container.extra-large canvas {
+    max-height: 450px;
+    max-width: 100%;
+    width: 100% !important;
+    height: auto !important;
+}
+
+/* --- VIEW TOTAL / SAVINGS --- */
+
+.view-total {
+    margin-top: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: hsl(var(--card));
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    text-align: right;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    width: 100%;
+}
+
+.available-savings {
+    margin-top: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: hsl(var(--primary));
+    border-radius: var(--radius);
+    color: hsl(var(--primary-foreground));
+    text-align: right;
+    font-size: 0.9375rem;
+    font-weight: 600;
+    width: 100%;
+}
+
+/* --- SAVINGS SUMMARY (Analytics) --- */
+
+.savings-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+    width: 100%;
+    overflow-x: clip;
+}
+
+.savings-summary .savings-card {
+    background: hsl(var(--card));
+    padding: 1.75rem;
+    border-radius: var(--radius);
+    border: 1px solid hsl(var(--border));
+    text-align: center;
+}
+
+.savings-summary .savings-card h3 {
+    font-size: 1rem;
+    font-weight: 600;
+    color: hsl(var(--foreground));
+    margin-bottom: 0.375rem;
+}
+
+.savings-formula {
+    font-size: 0.8125rem;
+    color: hsl(var(--muted-foreground));
+    margin-bottom: 0.875rem;
+}
+
+.savings-amount {
+    font-size: 2.25rem;
+    font-weight: 700;
+    color: hsl(var(--success));
+    letter-spacing: -0.02em;
+}
